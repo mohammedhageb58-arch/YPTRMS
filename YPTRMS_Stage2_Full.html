@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YPTRMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{--navy:#0A1E46;--red:#D71920;--bg:#F8FAFC;--card:#fff;--line:#E2E8F0;--txt:#0F172A;--mut:#64748B;--ok:#16A34A;--tbh:72px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
+.hidden{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.ico{width:18px;height:18px;vertical-align:middle}
+/* Material 3 controls */
+.field{position:relative;margin-bottom:16px}
+.field input{width:100%;height:52px;border:1px solid #94A3B8;border-radius:12px;padding:18px 14px 6px 44px;font:inherit;background:#fff;outline:none;transition:.15s}
+.field input:focus{border:2px solid var(--navy);padding:17px 13px 5px 43px}
+.field label{position:absolute;left:44px;top:16px;color:var(--mut);pointer-events:none;transition:.15s}
+.field input:focus+label,.field input:not(:placeholder-shown)+label{top:5px;font-size:11px;color:var(--navy);font-weight:600}
+.field>i,.field>svg{position:absolute;left:14px;top:16px;color:var(--mut);width:20px;height:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 22px;border:0;border-radius:22px;font:600 14px Inter;cursor:pointer;transition:.15s}
+.btn-primary{background:var(--red);color:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}.btn-primary:hover{background:#B9141A;box-shadow:0 3px 8px rgba(215,25,32,.35)}
+.btn-tonal{background:#E0E7F5;color:var(--navy)}.btn-tonal:hover{background:#CDD8EE}
+.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);height:36px;padding:0 14px;font-size:13px}.btn-ghost:hover{background:rgba(255,255,255,.12)}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut);cursor:pointer}.chk input{accent-color:var(--navy);width:18px;height:18px}
+/* Login */
+#loginGate{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#0A1E46 0%,#13306E 60%,#0A1E46 100%);padding:20px}
+.login-box{width:100%;max-width:420px;padding:32px}
+.login-head{text-align:center;margin-bottom:24px}
+.login-head h1{color:var(--navy);font-size:28px;font-weight:800;letter-spacing:2px}
+.login-head p{color:var(--mut);font-size:11px;letter-spacing:1px;margin-top:4px;text-transform:uppercase}
+.emblem{min-width:136px;max-width:240px;height:68px;padding:0!important;border-radius:14px;background:#fff!important;display:inline-flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#fff;border:2px solid var(--red)}
+.err{color:var(--red);font-size:13px;min-height:18px;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.stack{display:flex;flex-direction:column;gap:10px}
+/* Shell */
+.topbar{background:var(--navy);color:#fff;display:flex;align-items:center;gap:20px;padding:0 24px;height:72px;position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:14px}
+#emblemSlot{min-width:88px;max-width:140px;height:48px;padding:0!important;border-radius:10px;border:2px dashed rgba(255,255,255,.45);display:inline-flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;flex:none;background:#fff!important}
+#emblemSlot img{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:fill!important;display:block}
+#loginEmblem img{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:fill!important;display:block}
+.brand h1{font-size:28px;font-weight:800;text-transform:uppercase;letter-spacing:2px;line-height:1}
+.brand small{display:block;font-size:10px;letter-spacing:1.2px;opacity:.75;margin-top:4px}
+.search{flex:1;max-width:360px;margin-left:auto;position:relative}
+.search input{width:100%;height:40px;border-radius:20px;border:0;padding:0 16px 0 40px;background:rgba(255,255,255,.12);color:#fff;font:inherit;outline:none}
+.search input::placeholder{color:rgba(255,255,255,.6)}.search input:focus{background:rgba(255,255,255,.2)}
+.search svg,.search i{position:absolute;left:13px;top:11px;width:18px;height:18px;color:rgba(255,255,255,.7)}
+.clock{font-variant-numeric:tabular-nums;font-weight:600;text-align:right;line-height:1.2}.clock small{display:block;font-size:10px;opacity:.7;font-weight:400}
+.net{padding:5px 12px;border-radius:14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.net.on{background:rgba(22,163,74,.2);color:#4ADE80}.net.off{background:rgba(215,25,32,.25);color:#FCA5A5}
+.net:before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.userbadge{display:flex;align-items:center;gap:10px;font-size:13px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--red);display:grid;place-items:center;font-weight:700}
+.tabs{background:#fff;border-bottom:1px solid var(--line);display:flex;gap:4px;padding:0 24px;overflow-x:auto;position:sticky;top:var(--tbh,72px);z-index:40}
+.tabs button{display:flex;align-items:center;gap:8px;padding:16px 18px;border:0;background:none;font:600 14px Inter;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button:hover{color:var(--navy);background:#F1F5F9}.tabs button.active{color:var(--navy);border-bottom-color:var(--red)}
+main{max-width:1400px;margin:0 auto;padding:24px}
+.hero{background:linear-gradient(120deg,#0A1E46 0%,#14346F 100%);border-radius:16px;color:#fff;display:grid;grid-template-columns:1.1fr 1fr;min-height:220px;overflow:hidden;margin-bottom:24px;position:relative}
+.hero-txt{padding:32px;z-index:2;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.hero-txt h2{font-size:30px;font-weight:800}.hero-txt p{opacity:.8;max-width:460px;line-height:1.5}
+.hero-txt .tag{display:inline-block;background:var(--red);padding:4px 12px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:1px;width:max-content}
+#heroSlideshow{position:relative;min-height:220px;overflow:hidden;clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);
+ background:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 2px,transparent 2px 28px),linear-gradient(135deg,#1B3F85,#0A1E46)}
+#heroSlideshow .geo{position:absolute;inset:0;display:grid;place-items:center;opacity:.25}
+#heroSlideshow .geo:before{content:"";width:180px;height:180px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 30px rgba(255,255,255,.08),0 0 0 60px rgba(215,25,32,.12)}
+#heroSlideshow img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.5s ease}
+#heroSlideshow img.show{opacity:1}
+.hero-actions{position:absolute;bottom:12px;right:14px;z-index:3}
+.tab-pane{display:none}.tab-pane.active{display:block}
+/* Oracle-style tables & audit */
+table.ora{width:100%;border-collapse:collapse;font-size:13px}
+table.ora th{background:#EEF2F7;color:var(--navy);text-align:left;padding:9px 12px;border:1px solid var(--line);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.5px}
+table.ora td{padding:8px 12px;border:1px solid var(--line)}table.ora tr:nth-child(even) td{background:#F8FAFC}table.ora tr:hover td{background:#EAF0FA}
+.audit{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#0F172A;color:#CBD5E1;border-radius:12px;padding:14px;max-height:260px;overflow:auto}
+.audit .t{color:#64748B}.audit .u{color:#7DD3FC}.audit .a{color:#FCA5A5}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:12px 22px;border-radius:12px;z-index:999;opacity:0;pointer-events:none;transition:.25s}
+#toast.show{opacity:1}
+@media(max-width:800px){
+ .hero{grid-template-columns:1fr}#heroSlideshow{clip-path:none;min-height:140px}.brand h1{font-size:22px}
+ /* clean multi-row mobile header with guaranteed visible logout button */
+ .topbar{height:auto;min-height:60px;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 12px}
+ .brand{flex:1 1 auto;min-width:0;gap:10px}
+ .brand h1{font-size:20px;letter-spacing:1.5px}
+ .brand small{display:block!important;font-size:8.5px;letter-spacing:.6px;line-height:1.25;white-space:normal;margin-top:3px}
+ .userbadge{order:0;display:flex!important;align-items:center;gap:6px;flex-shrink:0;margin-left:auto}
+ .userbadge span{display:none!important}
+ #btnLogout{display:inline-flex!important;align-items:center;justify-content:center;flex-shrink:0;width:36px;height:36px;min-width:36px;padding:0;border-radius:10px;border:1px solid rgba(255,255,255,.55);background:rgba(255,255,255,.14);color:#fff!important;font-size:0;gap:0}
+ #btnLogout .ico,#btnLogout svg{display:block!important;width:18px;height:18px;color:#fff!important;stroke:#fff!important;opacity:1!important;visibility:visible!important}
+ .clock{display:block!important;order:1;flex:1 1 auto;text-align:left;font-size:13px}
+ .clock small{font-size:9px}
+ .net{order:2;flex-shrink:0;padding:4px 9px;font-size:11px}
+ .search{order:3;flex:1 1 100%;max-width:none;margin:0}
+ .tabs{padding:0 8px}
+ .in,select.in,textarea.in,.field input{font-size:16px} /* stops iOS zoom-on-focus */
+}
+@media(max-width:380px){.brand h1{font-size:18px}.userbadge span{max-width:84px}}
+</style>
+<style id="dash-css">
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;cursor:pointer;position:relative;transition:.15s;display:flex;flex-direction:column;gap:6px}
+.kpi:hover{box-shadow:0 6px 18px rgba(10,30,70,.12);transform:translateY(-2px)}
+.kl{font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}.kv{font-size:38px;font-weight:800;color:var(--navy);line-height:1}
+.kpi small{color:var(--mut)}.kpi>.bdg{position:absolute;top:16px;right:16px}
+.don{position:relative;width:84px;height:84px}.don b{position:absolute;inset:0;display:grid;place-items:center;font-size:18px;color:var(--navy)}
+.dgrid{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}.dcol{display:flex;flex-direction:column;gap:20px;min-width:0}
+.card h3{font-size:15px;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.qh{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--mut);margin:14px 0 4px;letter-spacing:.5px}.qh:first-child{margin-top:0}
+.qrow,.rm{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}.qrow:last-child,.rm:last-child{border:0}
+.qbt{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.qbt small,.qrow small,.rm small{color:var(--mut);font-size:11px}
+.mini{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 11px;border-radius:14px;font:600 12px Inter;text-decoration:none;color:#fff;cursor:pointer}
+.mini .ico{width:14px;height:14px}.mini.wa{background:#16A34A}.mini.em{background:var(--navy)}.mini.call{background:#475569}.mini.sentb{background:#DCFCE7;color:#166534;cursor:default}
+.bdg{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;background:#E2E8F0;color:#334155}
+.bdg.r{background:#FEE2E2;color:#B91C1C}.bdg.a{background:#FEF3C7;color:#B45309}.bdg.g{background:#DCFCE7;color:#166534}
+.rb{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px}.rb>span{width:130px}.rb b{width:38px;text-align:right}
+.bar{flex:1;height:8px;background:#E2E8F0;border-radius:4px;overflow:hidden}.bar i{display:block;height:100%}
+.live{font-size:12px;color:var(--mut);margin-bottom:8px;display:flex;align-items:center;gap:8px}.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pl 1.5s infinite}
+@keyframes pl{50%{opacity:.3}}.audit div{padding:3px 0;border-bottom:1px solid #1E293B}
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center}.wb{height:70px;background:#EEF2F7;border-radius:6px;display:flex;align-items:flex-end;margin-bottom:4px}.wb i{display:block;width:100%;background:var(--navy);border-radius:6px}
+.wk small{display:block;color:var(--mut);font-size:11px}.wt{display:flex;justify-content:space-around;margin-top:14px;font-size:12px;color:var(--mut)}.wt b{color:var(--navy);font-size:18px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.dgrid{grid-template-columns:1fr}}
+</style>
+<style id="crew-css">
+.tb{display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.grow{flex:1;min-width:0}
+.ch{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{height:32px;padding:0 14px;border:1px solid #94A3B8;border-radius:8px;background:#fff;font:600 13px Inter;color:var(--txt);cursor:pointer}.chip:hover{background:#F1F5F9}.chip.on{background:#E0E7F5;border-color:var(--navy);color:var(--navy)}
+.in{width:100%;height:44px;border:1px solid #94A3B8;border-radius:12px;padding:0 12px;font:inherit;background:#fff;outline:none}.in:focus{border:2px solid var(--navy);padding:0 11px}
+textarea.in{height:80px;padding:10px 12px;resize:vertical}.lb{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--mut)}
+th.s{cursor:pointer;user-select:none}tr.cr{cursor:pointer}.btn.sm{height:32px;padding:0 14px;font-size:12px}button.mini{border:0}
+.mini.nv{background:var(--navy)}.mini.gy{background:#475569}.mini.rd{background:var(--red)}
+.sw{width:40px;height:22px;border-radius:11px;border:0;background:#CBD5E1;position:relative;cursor:pointer}.sw:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}.sw.on{background:var(--ok)}.sw.on:after{left:21px}
+.ic{width:34px;height:34px;border:0;border-radius:50%;background:transparent;cursor:pointer;color:var(--mut);display:inline-grid;place-items:center}.ic:hover{background:#EEF2F7}
+.mo{position:fixed;inset:0;background:rgba(10,30,70,.55);display:grid;place-items:center;z-index:200;padding:16px;overflow:auto;-webkit-overflow-scrolling:touch}
+.md{background:#fff;border-radius:16px;width:100%;max-width:880px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.3)}.md.sm{max-width:480px}.md.lg{max-width:920px}
+.hd{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}.hd h3{color:var(--navy);font-size:17px}
+.bd{padding:20px;overflow:auto;flex:1}.ft{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line)}
+.mt{display:flex;border-bottom:1px solid var(--line);padding:0 12px;overflow-x:auto;flex-shrink:0;min-height:44px}.mt button{display:flex;gap:6px;align-items:center;padding:11px 14px;border:0;background:none;font:600 13px Inter;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;flex-shrink:0}.mt button.on{color:var(--navy);border-bottom-color:var(--red)}
+@media(max-width:700px){.md:not(.sm){max-height:95vh;width:100%}.md:not(.sm) .hd{padding:10px 14px;gap:8px}.md:not(.sm) .hd h3{font-size:15px}.md:not(.sm) .hd .av{width:36px;height:36px;font-size:13px}.md:not(.sm) .bd{padding:14px}.md:not(.sm) .ft{padding:10px 14px}.mt{padding:0 6px}.mt button{padding:10px 10px;font-size:12px;gap:4px}}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.sh{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);font-weight:700;margin:18px 0 6px}
+.av{width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;overflow:hidden;flex:none}.av img{width:100%;height:100%;object-fit:cover}.av.big{width:96px;height:96px;font-size:28px}
+.rw{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.rw>b{width:150px;color:var(--navy);align-self:center}.rw .in{width:150px}
+.fb{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.fn{font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--navy)}
+.pv{padding:12px;overflow:auto;text-align:center}.pv img{max-width:100%}.pv iframe{width:100%;height:70vh;border:0}
+@media(max-width:700px){.g2{grid-template-columns:1fr}.rw>b{width:100%}}
+</style>
+<style id="pdf-css">
+.stk{display:flex;flex-direction:column;gap:20px}.rp{color:var(--mut);font-size:12px;line-height:1.5;margin-bottom:14px}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}.th{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#F8FAFC}
+.th img{width:100%;height:90px;object-fit:cover;display:block}.th .fb{justify-content:center;padding:4px}.ic:disabled{opacity:.3;cursor:default}
+</style>
+<style id="imp-css">.btn:disabled{opacity:.4;cursor:default}.kp{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}.kp>div{flex:1;min-width:110px;border:1px solid var(--line);border-radius:12px;padding:10px 14px}.kp b{display:block;font-size:26px;color:var(--navy)}.wn{font-size:12px;color:#B45309;background:#FEF3C7;border-radius:10px;padding:8px 12px;margin:10px 0;max-height:130px;overflow:auto;line-height:1.6}</style>
+<style id="step2-css">
+#yscn{position:fixed;inset:0;z-index:400;background:#000;color:#fff;display:flex;flex-direction:column;touch-action:none;user-select:none;-webkit-user-select:none}
+#yscn .yt{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0A1E46;border-bottom:3px solid #D71920}
+#yscn .yt b{flex:1;font-size:16px}
+#yscn .ys{flex:1;min-height:0;position:relative;overflow:hidden}
+#yscn video,#yscn svg,#yscn .yimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+#yscn svg{touch-action:none}
+#yscn .yq{fill:rgba(215,25,32,.14);stroke:#D71920;stroke-width:4;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+#yscn .yq.ok{stroke:#16A34A;fill:rgba(22,163,74,.2)}
+#yscn circle{fill:#fff;stroke:#D71920;stroke-width:4;vector-effect:non-scaling-stroke;cursor:grab}
+#yscn .ysh{fill:rgba(0,0,0,.55)}
+#yscn .yhint{position:absolute;left:12px;right:12px;bottom:12px;text-align:center;background:rgba(10,30,70,.88);padding:8px 12px;border-radius:12px;font-size:13px}
+#yscn .yb{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;padding:12px;background:#0A1E46}
+#yscn .yshut{width:68px;height:68px;border-radius:50%;border:5px solid #fff;background:#D71920;box-shadow:0 0 0 3px #D71920;cursor:pointer}
+#yscn .ych,#yscn .ypg{display:flex;gap:8px;width:100%;justify-content:center;flex-wrap:wrap}
+#yscn .ych .chip{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+#yscn .ych .chip.on{background:#fff;color:#0A1E46}
+#yscn .ypg img{height:56px;border:2px solid transparent;border-radius:6px;background:#fff}
+#yscn .ypg img.on{border-color:#D71920}
+</style>
+<style id="step3-css">
+#dspSheet{position:fixed;left:12px;right:12px;bottom:12px;z-index:380;max-width:560px;margin:auto;background:#fff;border:1px solid var(--line);border-top:4px solid var(--red);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.3);padding:14px 16px}
+#ocrPill{position:fixed;left:12px;bottom:12px;z-index:380;background:#0A1E46;color:#fff;border-radius:18px;padding:8px 14px;font-size:12px;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div id="loginGate">
+ <div class="card login-box">
+  <div class="login-head">
+   <div class="emblem" id="loginEmblem" style="overflow:hidden"><i data-lucide="plane"></i></div>
+   <h1>YPTRMS</h1><p>Yemenia Pilot Training &amp; Records Management</p>
+  </div>
+  <form id="loginForm" autocomplete="on">
+   <div class="field"><i data-lucide="user"></i><input id="lgId" placeholder=" " autocomplete="username" required><label>Email or Staff ID</label></div>
+   <div class="field"><i data-lucide="lock"></i><input id="lgPw" type="password" placeholder=" " autocomplete="current-password" required><label>Password</label></div>
+   <div class="row"><label class="chk"><input type="checkbox" id="lgRemember"> Remember Me</label></div>
+   <div class="err" id="lgErr"></div>
+   <div class="stack">
+    <button class="btn btn-primary" type="submit"><i data-lucide="log-in" class="ico"></i>Sign In</button>
+    <button class="btn btn-tonal" type="button" id="btnBio"><i data-lucide="fingerprint" class="ico"></i>Face ID / Touch ID</button>
+   </div>
+  </form>
+ </div>
+</div>
+
+<!-- MAIN SHELL -->
+<div id="appShell" class="hidden">
+ <header class="topbar">
+  <div class="brand">
+   <div id="emblemSlot" title="Upload winged emblem"><i data-lucide="award"></i></div>
+   <div><h1>YPTRMS</h1><small>YEMENIA FLIGHT OPERATIONS TRAINING DEPARTMENT</small></div>
+  </div>
+  <div class="search"><i data-lucide="search"></i><input id="globalSearch" placeholder="Search crew, records, courses…"></div>
+  <div class="clock"><span id="clockTime">--:--:--</span><small id="clockDate"></small></div>
+  <div class="net on" id="netBadge">Online</div>
+  <div class="userbadge"><div class="avatar" id="uAvatar">M</div><span id="uName"></span>
+   <button class="btn btn-ghost" id="btnLogout" title="Logout" aria-label="Logout"><i data-lucide="log-out" class="ico"></i><span class="lo-txt">Logout</span></button></div>
+ </header>
+ <nav class="tabs" id="tabs">
+  <button class="active" data-tab="dashboard"><i data-lucide="layout-dashboard" class="ico"></i>Dashboard</button>
+  <button data-tab="crew"><i data-lucide="users" class="ico"></i>Crew Records</button>
+  <button data-tab="planner"><i data-lucide="calendar-days" class="ico"></i>Training Planner</button>
+  <button data-tab="comms"><i data-lucide="message-square" class="ico"></i>Comms Center</button>
+  <button data-tab="facilities"><i data-lucide="building-2" class="ico"></i>Facilities &amp; FSS</button>
+  <button data-tab="reports"><i data-lucide="file-bar-chart" class="ico"></i>Reports &amp; Audits</button>
+  <button data-tab="settings"><i data-lucide="settings" class="ico"></i>Settings</button>
+ </nav>
+ <main>
+  <section class="hero">
+   <div class="hero-txt">
+    <span class="tag">FLIGHT OPERATIONS TRAINING</span>
+    <h2 id="heroGreet">Welcome</h2>
+    <p>Aden HQ · Pilot training, licensing, recurrent checks and records in one place.</p>
+   </div>
+   <div id="heroSlideshow"><div class="geo"></div></div>
+   <div class="hero-actions">
+    <input type="file" id="heroFiles" accept="image/*" multiple style="display:none">
+    <input type="file" id="emblemFile" accept="image/*" style="display:none"></div>
+  </section>
+  <div id="tab-dashboard" class="tab-pane active"></div>
+  <div id="tab-crew" class="tab-pane"></div>
+  <div id="tab-planner" class="tab-pane"></div>
+  <div id="tab-comms" class="tab-pane"></div>
+  <div id="tab-facilities" class="tab-pane"></div>
+  <div id="tab-reports" class="tab-pane"></div>
+  <div id="tab-settings" class="tab-pane"></div>
+ </main>
+</div>
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<template id="tpl-dashboard">
+ <div id="dKpis" class="kpis"></div>
+ <div class="dgrid">
+  <div class="dcol">
+   <div class="card"><h3><i data-lucide="send" class="ico"></i>Today's Automated Dispatch &amp; Action Queue</h3><div id="dQueue"></div></div>
+   <div class="card"><h3><i data-lucide="alarm-clock" class="ico"></i>Who Is Expiring Soon &amp; Readiness Breakdown</h3><div id="dExpiring"></div></div>
+   <div class="card"><h3><i data-lucide="scroll-text" class="ico"></i>Live User Activity &amp; Oracle Audit Log</h3><div id="dAudit"></div></div>
+  </div>
+  <div class="dcol">
+   <div class="card"><h3><i data-lucide="building-2" class="ico"></i>Aden Facilities — Live Status</h3><div id="dRooms"></div></div>
+   <div class="card"><h3><i data-lucide="calendar-range" class="ico"></i>7-Day Training Summary</h3><div id="dWeek"></div></div>
+   <div class="card"><h3><i data-lucide="phone-call" class="ico"></i>Crew Control / Flight Scheduling</h3><div id="dQuick"></div></div>
+  </div>
+ </div>
+</template>
+<template id="tpl-crew">
+ <div class="card">
+  <div class="tb"><h3 style="margin:0;color:var(--navy)">Crew Records</h3><span id="cCount" class="bdg"></span><div class="grow"></div>
+   <input id="cQ" class="in" style="max-width:300px" placeholder="Search name, Staff ID, rank…">
+   <button class="btn btn-primary" id="cAdd"><i data-lucide="user-plus" class="ico"></i>Add Crew</button></div>
+  <div class="ch" id="cChips"></div>
+  <div style="overflow:auto"><table class="ora" id="cTbl"></table></div>
+  <input type="file" id="crewFile" accept="image/*,application/pdf" style="display:none">
+  <input type="file" id="crewScan" accept="image/*" capture="environment" style="display:none">
+ </div>
+</template>
+<template id="tpl-crew-modal"><div id="crewModals"></div></template>
+<template id="tpl-fac"><div id="facBody" class="stk"></div></template>
+<template id="tpl-rep"><div class="g2" style="gap:20px">
+ <div class="card"><h3><i data-lucide="table-2" class="ico"></i>Crew Compliance Matrix</h3><p class="rp">Active crew only: licence, medical and recurrent expiry dates with an overall status.</p><button class="btn btn-primary sm" data-rep="matrix"><i data-lucide="file-text" class="ico"></i>Preview PDF</button></div>
+ <div class="card"><h3><i data-lucide="user-x" class="ico"></i>Inactive Crew Roster</h3><p class="rp">Inactive crew with reason and contact. They are excluded from alerts, queues and planning.</p><button class="btn btn-primary sm" data-rep="inactive"><i data-lucide="file-text" class="ico"></i>Preview PDF</button></div>
+ <div class="card"><h3><i data-lucide="id-card" class="ico"></i>Crew Profile Dossier</h3><p class="rp">One crew member: personal data, passport, all credentials and documents.</p><div class="fb"><select class="in" id="repCrew" style="max-width:300px"></select><button class="btn btn-primary sm" data-rep="dossier"><i data-lucide="file-text" class="ico"></i>Preview PDF</button></div></div>
+ <div class="card"><h3><i data-lucide="scroll-text" class="ico"></i>Audit Log</h3><p class="rp">Every change with Before and After values, user name, Staff ID and timestamp.</p><div class="fb"><button class="btn btn-primary sm" data-rep="audit"><i data-lucide="file-text" class="ico"></i>Preview PDF</button><button class="btn btn-tonal sm" data-rep="csv"><i data-lucide="download" class="ico"></i>Export CSV</button></div></div>
+</div></template>
+<template id="tpl-set"><div id="setBody" class="stk"></div><input type="file" id="setEmblem" accept="image/*" style="display:none"><input type="file" id="setHero" accept="image/*" multiple style="display:none"></template>
+<template id="tpl-pdf"><div id="pdfModal" class="mo hidden"><div class="md lg" style="max-width:1000px;height:92vh">
+ <div class="hd" style="background:#EEF2F7"><i data-lucide="file-text" class="ico"></i><h3 id="pdfTitle" class="grow"></h3><span id="pdfPages" class="bdg"></span>
+  <button class="ic" id="pdfZo" title="Zoom out"><i data-lucide="zoom-out" class="ico"></i></button><b id="pdfZoom">100%</b><button class="ic" id="pdfZi" title="Zoom in"><i data-lucide="zoom-in" class="ico"></i></button>
+  <button class="btn btn-tonal sm" id="pdfPrint"><i data-lucide="printer" class="ico"></i>Direct Print</button><button class="btn btn-primary sm" id="pdfDl"><i data-lucide="download" class="ico"></i>Download PDF</button><button class="ic" id="pdfX"><i data-lucide="x" class="ico"></i></button></div>
+ <div id="pdfBox" style="flex:1;background:#525659;min-height:0"></div></div></div></template>
+
+<script>
+/* YPTRMS Step 1A-1 — trial default password for all 5 manager slots: Yemenia@2026 (change in Settings module) */
+const KEY='YPTRMS_V1';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const sha=async t=>{
+ if(window.crypto&&crypto.subtle&&window.isSecureContext){
+  return[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+ }
+ let h=2166136261;
+ for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619);
+ return(h>>>0).toString(16).padStart(8,'0');
+};
+const STATE={session:null,audit:[],users:[
+ {slot:1,id:'82900',name:'Mohammed Khaled Hageb',email:'mohammed.hageb@yemenia.com',role:'System Admin'},
+ {slot:2,id:'1002',name:'Capt. Amr',email:'amr@yemenia.com',role:'Training Manager'},
+ {slot:3,id:'C001',name:'Coordinator 1',email:'coord1@yemenia.com',role:'Coordinator'},
+ {slot:4,id:'C002',name:'Coordinator 2',email:'coord2@yemenia.com',role:'Coordinator'},
+ {slot:5,id:'C003',name:'Coordinator 3',email:'coord3@yemenia.com',role:'Coordinator'}]};
+const load=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}};
+const save=o=>{try{localStorage.setItem(KEY,JSON.stringify({...load(),...o}))}catch(e){toast('Storage full or blocked')}};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+function logAudit(action){STATE.audit.unshift({ts:new Date().toISOString(),user:STATE.session?STATE.session.id:'-',action});STATE.audit=STATE.audit.slice(0,200);save({audit:STATE.audit})}
+async function initUsers(){const h=await sha('Yemenia@2026');STATE.users.forEach(u=>u.hash=h)}
+async function authenticate(idv,pw){
+ const q=idv.trim().toLowerCase(),u=STATE.users.find(x=>x.id.toLowerCase()===q||x.email===q);
+ return u&&u.hash===await sha(pw)?u:null}
+function enter(u,remember){
+ window.YPTRMS=window.YPTRMS||{STATE,load,save,toast,logAudit,$,$$};
+ STATE.session=u;STATE.audit=load().audit||[];
+ if(remember!==undefined)save({remember:remember?u.id:null});
+ save({lastUser:u.id});logAudit('LOGIN');
+ $('#loginGate').classList.add('hidden');$('#appShell').classList.remove('hidden');
+ $('#uName').textContent=u.name;$('#uAvatar').textContent=u.name.replace('Capt. ','')[0];
+ $('#heroGreet').textContent='Welcome, '+u.name;
+ document.dispatchEvent(new CustomEvent('yptrms:login',{detail:u}));try{lucide.createIcons();}catch(e){}}
+$('#loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();$('#lgErr').textContent='';
+ const u=await authenticate($('#lgId').value,$('#lgPw').value);
+ if(!u){$('#lgErr').textContent='Invalid credentials. Please try again.';return}
+ enter(u,$('#lgRemember').checked)});
+$('#btnBio').onclick=async()=>{
+ const st=load(),m=(window.Store&&window.Store.get('managers')||[]).find(x=>x.staffId===(st.lastUser||st.remember));
+ if(m&&m.bio==='No'){toast('Biometric sign-in is disabled for this account');return}
+ const supported=window.PublicKeyCredential&&navigator.credentials&&window.isSecureContext;
+ if(!supported){toast('Biometrics unavailable here — use password or Quick Enter');return}
+ try{
+  const rnd=crypto.getRandomValues(new Uint8Array(32));
+  const lastId=st.lastUser||st.remember;
+  const user=STATE.users.find(x=>x.id===lastId);
+  if(!user){toast('Sign in once with password first to enable biometrics');return}
+  if(st.credId){
+   const raw=Uint8Array.from(atob(st.credId),c=>c.charCodeAt(0));
+   await navigator.credentials.get({publicKey:{challenge:rnd,allowCredentials:[{id:raw,type:'public-key'}],userVerification:'required',timeout:60000}});
+  }else{
+   const c=await navigator.credentials.create({publicKey:{challenge:rnd,rp:{name:'YPTRMS'},user:{id:new TextEncoder().encode(user.id),name:user.email,displayName:user.name},
+    pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}});
+   save({credId:btoa(String.fromCharCode(...new Uint8Array(c.rawId)))});toast('Biometric enrolled for '+user.name)}
+  enter(user,undefined)
+ }catch(err){toast('Biometric cancelled or unsupported — use password')}};
+(function ensureLogoutIcon(){const b=$('#btnLogout');if(!b)return;if(!b.querySelector('svg')){const sp=b.querySelector('.lo-txt');if(sp)sp.textContent='Logout';const ic=b.querySelector('i');if(ic&&!ic.textContent)ic.textContent='⎋'}})();
+$('#btnLogout').onclick=()=>{logAudit('LOGOUT');STATE.session=null;$('#appShell').classList.add('hidden');$('#loginGate').classList.remove('hidden');$('#lgPw').value='';$('#lgErr').textContent=''};
+/* Tabs */
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ $$('#tabs button').forEach(x=>x.classList.toggle('active',x===b));
+ $$('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+b.dataset.tab));
+ document.dispatchEvent(new CustomEvent('yptrms:tab',{detail:b.dataset.tab}))});
+/* Clock + online badge */
+function tick(){const d=new Date();$('#clockTime').textContent=d.toLocaleTimeString('en-GB');$('#clockDate').textContent=d.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'})+' · AST'}
+function net(){const on=navigator.onLine,b=$('#netBadge');b.className='net '+(on?'on':'off');b.textContent=on?'Online':'Offline'}
+setInterval(tick,1000);tick();net();addEventListener('online',net);addEventListener('offline',net);
+/* Hero slideshow (fallback = geometric background) */
+let slideTimer=null,slideIdx=0;
+function renderSlides(){
+ const box=$('#heroSlideshow'),imgs=load().heroImgs||[];
+ box.querySelectorAll('img').forEach(i=>i.remove());clearInterval(slideTimer);
+ imgs.forEach((src,i)=>{const im=new Image();im.src=src;im.alt='Aircraft';if(!i)im.className='show';box.appendChild(im)});
+ const els=box.querySelectorAll('img');slideIdx=0;
+ if(els.length>1)slideTimer=setInterval(()=>{els[slideIdx].classList.remove('show');slideIdx=(slideIdx+1)%els.length;els[slideIdx].classList.add('show')},5000)}
+const readFile=f=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)});
+$('#heroFiles').onchange=async e=>{const arr=[];for(const f of [...e.target.files].slice(0,8))arr.push(await readFile(f));
+ save({heroImgs:[...(load().heroImgs||[]),...arr].slice(-8)});renderSlides();toast(arr.length+' photo(s) added');e.target.value=''};
+$('#emblemSlot').onclick=()=>$('#emblemFile').click();
+$('#emblemFile').onchange=async e=>{if(e.target.files[0]){save({emblem:await readFile(e.target.files[0])});renderEmblem()}e.target.value=''};
+function getLogoSrc(){const st=load();return st.emblem||(st.db&&st.db.settings&&st.db.settings.emblem)||''}
+function renderEmblem(){const s=$('#emblemSlot'),le=$('#loginEmblem'),em=getLogoSrc();if(em){if(s){s.style.border='2px solid rgba(255,255,255,.65)';s.innerHTML='<img src="'+em+'" alt="Logo">'}if(le){le.style.background='#fff';le.style.borderColor='#CBD5E1';le.innerHTML='<img src="'+em+'" alt="Logo">'}}else{if(s){s.style.border='';s.style.background='';s.style.padding='';s.innerHTML='<i data-lucide="award"></i>'}if(le){le.style.background='#fff';le.style.borderColor='var(--red)';le.innerHTML='<i data-lucide="plane"></i>'}}try{lucide.createIcons()}catch(e){}}
+window.addEventListener('storage',renderEmblem);
+document.addEventListener('yptrms:login',renderEmblem);
+/* Boot */
+window.lucide=window.lucide||{createIcons(){}};
+window.YPTRMS={STATE,load,save,toast,logAudit,$,$$};
+(async()=>{
+ try{await initUsers();}catch(e){console.warn('initUsers fallback:',e);}
+ const st=load();
+ if(st.remember){$('#lgId').value=st.remember;$('#lgRemember').checked=true}
+ renderSlides();renderEmblem();
+ try{lucide.createIcons();}catch(e){}
+})();
+</script>
+<script id="core-db">
+/* YPTRMS core-db: Store over YPTRMS_V1 (key "db"). Seed data is TRIAL sample data; every record supports Store.add/update/remove with audit. */
+(()=>{
+const Y=()=>window.YPTRMS,p2=n=>String(n).padStart(2,'0'),iso=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+const D={iso,today:()=>iso(new Date()),addDays:n=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return iso(d)},
+ daysTo:s=>Math.round((new Date(s+'T12:00:00')-new Date(iso(new Date())+'T12:00:00'))/864e5)};
+const uid=()=>Math.random().toString(36).slice(2,9);
+let DB=null,cur={name:'System',id:'-'};
+const persist=()=>Y().save({db:DB});
+function seed(){
+ const FC=['Class 1 Medical','Licence Validity','OPC / Recurrent'],CC=['Cabin Attestation','Medical','SEP / Recurrent'];
+ const rows=[['Capt. Faisal Al-Hakimi','10110','CAPT','A320','Active','',[210,95,40]],['Capt. Saleh Bamatraf','10122','CAPT','A330','Active','',[150,300,52]],
+ ['Capt. Omar Baobaid','10135','CAPT','A320','Active','',[-12,180,120]],['F/O Yasser Al-Kaf','20141','F/O','A320','Active','',[75,45,210]],
+ ['F/O Hani Mutahar','20152','F/O','A330','Active','',[330,260,28]],['F/O Rami Al-Sayed','20163','F/O','A320','Active','',[5,200,90]],
+ ['Capt. Adel Shamsan','10171','CAPT','A330','Active','',[400,150,-3]],['F/O Tariq Bin Shaikh','20184','F/O','A330','Active','',[120,88,160]],
+ ['Capt. Murad Al-Kawkabani','10190','CAPT','A320','Inactive','Medical leave',[-40,200,100]],['F/O Walid Al-Jifri','20195','F/O','A320','Inactive','Seconded to Ground Ops',[-90,60,30]],
+ ['Huda Al-Attas','30201','PURS','A320','Active','',[140,30,200]],['Amal Basurra','30212','PURS','A330','Active','',[-8,200,100]],
+ ['Samar Al-Yafai','40221','F/A','A320','Active','',[55,170,220]],['Nadia Bajamal','40232','F/A','A330','Active','',[260,310,-20]],
+ ['Rasha Al-Amoudi','40243','F/A','A320','Active','',[200,66,150]],['Layla Saeed','40254','F/A','A330','Active','',[18,120,300]],
+ ['Mona Al-Habshi','40265','F/A','A320','Inactive','Maternity leave',[-15,90,45]]];
+ const crew=rows.map(([name,staffId,rank,fleet,status,reason,o])=>{const fl=rank==='CAPT'||rank==='F/O';
+  return{id:uid(),name,staffId,rank,group:fl?'Flight':'Cabin',fleet,status,reason,phone:'',email:staffId+'@yemenia.com',creds:(fl?FC:CC).map((n,i)=>({name:n,expiry:D.addDays(o[i])}))}});
+ const fss=['JATS Amman','EgyptAir Training Academy Cairo'].map(name=>({id:uid(),name,poc:'POC — to be set',whatsapp:'',email:'',leadDays:null}));
+ const S=[[0,'08:00','13:00','Aden Classroom 1','A320 Recurrent Ground','Capt. Amr',12],[0,'14:00','16:00','VACBI Room','CRM Module (VACBI)','Coordinator 1',6],
+ [1,'09:00','12:00','Aden Classroom 2','SEP Cabin Recurrent','Coordinator 2',14],[2,'10:00','15:00','Aden Classroom 1','A330 Recurrent Ground','Capt. Amr',10],
+ [3,'09:00','11:00','VACBI Room','Dangerous Goods','Coordinator 3',8],[5,'09:00','13:00','Aden Classroom 2','TRI Standardisation','Capt. Amr',5],
+ [6,'13:00','16:00','Aden Classroom 1','Cabin Attestation Briefing','Coordinator 1',9]];
+ return{v:1,managers:Y().STATE.users.map(u=>({id:uid(),slot:u.slot,staffId:u.id,name:u.name,email:u.email,role:u.role,phone:'',bio:'Yes'})),crew,
+ rooms:[['Aden Classroom 1',20],['Aden Classroom 2',16],['VACBI Room',8]].map(([name,capacity])=>({id:uid(),name,capacity,override:'',note:''})),
+ fss,fssReqs:[[0,3,'A320 OPC simulator slot',60],[0,5,'A320 recurrent FSS block',70],[1,4,'A330 recurrent FSS block',130]].map(([f,c,desc,n])=>({id:uid(),providerId:fss[f].id,crewId:crew[c].id,desc,need:D.addDays(n),sentOn:null})),
+ contacts:[{id:uid(),dept:'Crew Control',name:'Crew Control Desk',phone:'',email:'crewcontrol@yemenia.com'},{id:uid(),dept:'Flight Scheduling',name:'Flight Scheduling Desk',phone:'',email:'flightscheduling@yemenia.com'}],
+ courses:[{code:'C101',name:'A320 Recurrent Ground',validity:'12'},{code:'C102',name:'A330 Recurrent Ground',validity:'12'},{code:'C103',name:'CRM',validity:'12'},{code:'C104',name:'Dangerous Goods',validity:'24'},{code:'C105',name:'SEP Cabin Recurrent',validity:'12'},{code:'C106',name:'TRI/TRE Standardisation',validity:'36'}].map(c=>({id:uid(),...c})),
+ docTypes:['Training Certificate','Attendance Record','Licence Copy','Medical Report','Correspondence','Other'].map(name=>({id:uid(),name})),
+ licenses:['ATPL','CPL','TRE','TRI','Ground Instructor','Cabin Attestation'].map(name=>({id:uid(),name})),
+ sessions:S.map(([o,start,end,room,course,instructor,trainees])=>({id:uid(),date:D.addDays(o),start,end,room,course,instructor,trainees})),
+ rosters:[['A320 Recurrent Ground — Day 1',1,'Aden Classroom 2'],['CRM VACBI Group B',3,'VACBI Room']].map(([title,o,room])=>({id:uid(),title,date:D.addDays(o),room,sentOn:null})),
+ sent:{},audit:[],settings:{fssLead:75}}}
+const db=()=>{if(!DB){DB=Y().load().db;if(!DB||!DB.v){DB=seed();persist()}else{let ch=0;if(!Array.isArray(DB.docTypes)){DB.docTypes=['Training Certificate','Attendance Record','Licence Copy','Medical Report','Correspondence','Other'].map(name=>({id:uid(),name}));ch=1}(DB.courses||[]).forEach(c=>{if(c.validity===undefined){c.validity=/dangerous/i.test(c.name)?'24':/tri|tre/i.test(c.name)?'36':'12';ch=1}});if(ch)persist()}}return DB};
+const fmt=v=>{const s=v&&typeof v==='object'?JSON.stringify(v):String(v??'—');return s.length>60?s.slice(0,57)+'…':s};
+const lbl=r=>r.name||r.title||r.code||r.desc||r.id;
+const Store={
+ get:c=>db()[c],find:(c,id)=>db()[c].find(r=>r.id===id),
+ log(col,action,before,after){const d=db();d.audit.unshift({id:uid(),ts:new Date().toISOString(),user:cur.name,staffId:cur.id,col,action,before:before??'—',after:after??'—'});d.audit=d.audit.slice(0,300);persist()},
+ add(c,rec){rec.id=uid();db()[c].push(rec);Store.log(c,'CREATE',null,lbl(rec));return rec},
+ update(c,id,patch){const r=Store.find(c,id);if(!r)return;const b=[],a=[];
+  Object.keys(patch).forEach(k=>{if(JSON.stringify(r[k])!==JSON.stringify(patch[k])){b.push(k+': '+fmt(r[k]));a.push(k+': '+fmt(patch[k]))}});
+  Object.assign(r,patch);persist();Store.log(c,'UPDATE '+lbl(r),b.join('; '),a.join('; '));return r},
+ remove(c,id){const r=Store.find(c,id);if(!r)return;db()[c]=db()[c].filter(x=>x.id!==id);Store.log(c,'DELETE',lbl(r),null)},
+ mark(k){db().sent[k]=D.today();persist()},sentToday:k=>db().sent[k]===D.today(),
+ reset(){DB=seed();persist();Store.log('system','RESET','Custom data','Seed data')}};
+window.Store=Store;window.YDate=D;
+document.addEventListener('yptrms:login',e=>{cur={name:e.detail.name,id:e.detail.id};Store.log('session','LOGIN','Signed out','Signed in')});
+document.getElementById('btnLogout').addEventListener('click',()=>Store.log('session','LOGOUT','Signed in','Signed out'));
+})();
+</script>
+<script id="core-dashboard">
+(()=>{
+const S=window.Store,D=window.YDate,$=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mins=t=>+t.slice(0,2)*60+ +t.slice(3),nowMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
+const col=v=>v>=90?'#16A34A':v>=75?'#F59E0B':'#D71920';
+const waUrl=(ph,m)=>'https://wa.me/'+String(ph||'').replace(/\D/g,'')+'?text='+encodeURIComponent(m);
+const mailUrl=(em,s,m)=>'mailto:'+(em||'')+'?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(m);
+function send(att,ph,em,subj,msg,done){if(done)return'<span class="mini sentb"><i data-lucide="check" class="ico"></i>Sent Today</span>';
+ return`<a class="mini wa" ${att} target="_blank" rel="noopener" href="${esc(waUrl(ph,msg))}"><i data-lucide="message-circle" class="ico"></i>WhatsApp</a><a class="mini em" ${att} href="${esc(mailUrl(em,subj,msg))}"><i data-lucide="mail" class="ico"></i>Email</a>`}
+function analyse(){const act=S.get('crew').filter(c=>c.status==='Active');
+ const info=act.map(c=>{const cr=c.creds.map(x=>({...x,d:D.daysTo(x.expiry)})).sort((a,b)=>a.d-b.d);return{c,cr,min:cr.length?cr[0].d:9999}});
+ return{act,info,exp:info.filter(i=>i.min<0),soon:info.filter(i=>i.min>=0&&i.min<=60)}}
+const pctOk=l=>l.length?Math.round(100*l.filter(i=>i.min>=0).length/l.length):0;
+function kpis(a){const fl=a.act.filter(c=>c.group==='Flight').length,inact=S.get('crew').filter(c=>c.status!=='Active').length,rd=pctOk(a.info),C=2*Math.PI*34;
+ return`<div class="kpi" data-kpi="active"><div class="kl">Active Crew</div><div class="kv">${a.act.length}</div><small>CAPT/FO ${fl} · PURS/F/A ${a.act.length-fl}</small><span class="bdg g" data-kpi="inactive">${inact} Inactive</span></div>
+<div class="kpi" data-kpi="readiness"><div class="kl">Fleet Readiness</div><div class="don"><svg viewBox="0 0 80 80" width="84" height="84"><circle cx="40" cy="40" r="34" fill="none" stroke="#E2E8F0" stroke-width="9"/><circle cx="40" cy="40" r="34" fill="none" stroke="${col(rd)}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(rd/100*C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 40 40)"/></svg><b>${rd}%</b></div></div>
+<div class="kpi" data-kpi="due"><div class="kl">Due Soon (Within 60 Days)</div><div class="kv" style="color:#F59E0B">${a.soon.length}</div><small>Active crew, nothing expired yet</small></div>
+<div class="kpi" data-kpi="expired"><div class="kl">Expired / Grounding Risk</div><div class="kv" style="color:var(--red)">${a.exp.length}</div><small>Active crew with an expired credential</small></div>`}
+function queue(a){const T=D.today();let h='';
+ const notes=a.info.filter(i=>i.min<=30).sort((x,y)=>x.min-y.min),cc=S.get('contacts').find(z=>z.dept==='Crew Control')||{};
+ h+=`<div class="qh">Safety notices — Crew + Crew Control (${notes.length})</div>`;
+ notes.slice(0,5).forEach(i=>{const c=i.c,x=i.cr[0],ex=x.d<0,w=ex?`expired ${-x.d} day(s) ago`:`expires in ${x.d} day(s) (${x.expiry})`;
+  const m1=`Dear ${c.name}, your ${x.name} ${w}. Please contact Flight Operations Training to revalidate.`;
+  const m2=`SAFETY NOTICE: ${c.rank} ${c.name} (${c.staffId}, ${c.fleet}) - ${x.name} ${w}.${ex?' Do not roster until revalidated.':' Plan roster around revalidation.'}`;
+  const k1=`n:${T}:${c.id}:crew`,k2=`n:${T}:${c.id}:cc`,at=(k,l)=>`data-act="1" data-key="${k}" data-lbl="${esc(l)}"`;
+  h+=`<div class="qrow"><div><b>${esc(c.rank)} ${esc(c.name)}</b> <span class="bdg ${ex?'r':'a'}">${ex?'EXPIRED':x.d+' d'}</span><br><small>${esc(x.name)} — ${esc(w)}</small></div>
+  <div class="qbt"><small>Crew</small>${send(at(k1,'Notice to Crew '+c.name),c.phone,c.email,'Training notice: '+x.name,m1,S.sentToday(k1))}<small>Crew Control</small>${send(at(k2,'Notice to Crew Control re '+c.name),cc.phone,cc.email,'Safety notice: '+c.name,m2,S.sentToday(k2))}</div></div>`});
+ if(notes.length>5)h+=`<small>+${notes.length-5} more in Crew Records</small>`;
+ if(!notes.length)h+='<small>No safety notices today.</small>';
+ const lead=S.get('settings').fssLead,fr=S.get('fssReqs').map(r=>({r,p:S.get('fss').find(f=>f.id===r.providerId)||{},d:D.daysTo(r.need)})).filter(o=>o.d<=(o.p.leadDays||lead)&&(!o.r.sentOn||o.r.sentOn===T));
+ h+=`<div class="qh">FSS requests inside lead time (${fr.length}) · default ${lead} days</div>`;
+ fr.forEach(({r,p,d})=>{const cn=(S.find('crew',r.crewId)||{}).name||'—',m=`Dear ${p.poc||'Team'}, FSS request: ${r.desc} for ${cn}, required by ${r.need}. Please confirm availability.`;
+  h+=`<div class="qrow"><div><b>${esc(p.name)}</b><br><small>${esc(r.desc)} · ${esc(cn)} · needed in ${d} d</small></div><div class="qbt">${send(`data-act="1" data-col="fssReqs" data-id="${r.id}"`,p.whatsapp,p.email,'FSS request: '+r.desc,m,r.sentOn===T)}</div></div>`});
+ if(!fr.length)h+='<small>No FSS requests due.</small>';
+ const ro=S.get('rosters').filter(r=>!r.sentOn||r.sentOn===T);
+ h+=`<div class="qh">Pending QR rosters (${ro.length})</div>`;
+ ro.forEach(r=>{const m=`Roster & QR attendance: ${r.title}, ${r.date}, ${r.room}. Scan the QR code at the room entrance on arrival.`;
+  h+=`<div class="qrow"><div><b>${esc(r.title)}</b><br><small>${esc(r.date)} · ${esc(r.room)}</small></div><div class="qbt">${send(`data-act="1" data-col="rosters" data-id="${r.id}"`,'','','Roster: '+r.title,m,r.sentOn===T)}</div></div>`});
+ if(!ro.length)h+='<small>All rosters dispatched.</small>';
+ return h}
+function expiring(a){const rows=[];a.info.forEach(i=>i.cr.forEach(x=>{if(x.d<=60)rows.push({c:i.c,x})}));rows.sort((p,q)=>p.x.d-q.x.d);
+ const bars=[['Flight','A320'],['Flight','A330'],['Cabin','A320'],['Cabin','A330']].map(([g,f])=>{const l=a.info.filter(i=>i.c.group===g&&i.c.fleet===f),v=pctOk(l);
+  return`<div class="rb"><span>${g} · ${f} <small>(${l.length})</small></span><div class="bar"><i style="width:${v}%;background:${col(v)}"></i></div><b>${v}%</b></div>`}).join('');
+ return bars+'<table class="ora" style="margin-top:12px"><tr><th>Name</th><th>Rank</th><th>Fleet</th><th>Expiring Credential</th><th>Days Left</th></tr>'+
+ rows.slice(0,10).map(({c,x})=>`<tr><td>${esc(c.name)}</td><td>${esc(c.rank)}</td><td>${esc(c.fleet)}</td><td>${esc(x.name)}</td><td><span class="bdg ${x.d<=14?'r':'a'}">${x.d<0?'Expired '+(-x.d)+' d':x.d+' d'}</span></td></tr>`).join('')+
+ (rows.length?'':'<tr><td colspan="5">No credentials expiring within 60 days.</td></tr>')+'</table>'+(rows.length>10?`<small style="color:var(--mut)">Showing 10 of ${rows.length}</small>`:'')}
+function auditH(){const u=window.YPTRMS.STATE.session,A=S.get('audit');
+ return`<div class="live"><span class="dot"></span>${u?esc(u.name)+' ('+esc(u.id)+') online':'—'} · ${A.length} entries</div><div class="audit">`+
+ A.slice(0,12).map(e=>`<div><span class="t">${new Date(e.ts).toLocaleString('en-GB')}</span> <span class="u">${esc(e.user)} (${esc(e.staffId)})</span> ${esc(e.action)} [${esc(e.col)}] <span class="a">${esc(e.before)}</span> → ${esc(e.after)}</div>`).join('')+'</div>'}
+function rooms(){const T=D.today(),n=nowMin(),ss=S.get('sessions').filter(s=>s.date===T);
+ return S.get('rooms').map(r=>{const rs=ss.filter(s=>s.room===r.name).sort((a,b)=>a.start<b.start?-1:1),cu=rs.find(s=>mins(s.start)<=n&&n<mins(s.end)),nx=rs.find(s=>mins(s.start)>n);
+  let st='Available',cl='g',nt=nx?`Next ${nx.start} · ${nx.course}`:'No more sessions today';
+  if(r.override==='Maintenance'){st='Maintenance';cl='a';nt=r.note||'Out of service'}else if(cu){st='In Use';cl='r';nt=`${cu.course} until ${cu.end}`}
+  return`<div class="rm"><div><b>${esc(r.name)}</b><br><small>${esc(nt)} · cap ${r.capacity}</small></div><span class="bdg ${cl}">${st}</span></div>`}).join('')}
+function week(){const ss=S.get('sessions');let tot=0,tr=0,hr=0;
+ const days=[...Array(7)].map((_,i)=>{const d=D.addDays(i),l=ss.filter(s=>s.date===d);l.forEach(s=>{tot++;tr+=s.trainees;hr+=(mins(s.end)-mins(s.start))/60});
+  return{l:new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short'}),n:l.length}}),mx=Math.max(1,...days.map(d=>d.n));
+ return`<div class="wk">${days.map(d=>`<div><div class="wb"><i style="height:${d.n/mx*100}%"></i></div><small>${d.l}</small><b>${d.n}</b></div>`).join('')}</div><div class="wt"><span><b>${tot}</b> sessions</span><span><b>${tr}</b> trainees</span><span><b>${hr}</b> hrs</span></div>`}
+function quick(){return S.get('contacts').map(c=>`<div class="rm"><div><b>${esc(c.dept)}</b><br><small>${esc(c.name)}</small></div><div class="qbt">
+ <a class="mini wa" target="_blank" rel="noopener" href="${esc(waUrl(c.phone,'Flight Ops Training: '))}"><i data-lucide="message-circle" class="ico"></i>WhatsApp</a>
+ <a class="mini em" href="${esc(mailUrl(c.email,'Flight Ops Training',''))}"><i data-lucide="mail" class="ico"></i>Email</a>${c.phone?`<a class="mini call" href="tel:${esc(c.phone)}"><i data-lucide="phone" class="ico"></i>Call</a>`:''}</div></div>`).join('')}
+function render(){const root=$('#tab-dashboard');if(!root||!window.YPTRMS||!window.YPTRMS.STATE.session)return;
+ if(!root.querySelector('.dgrid'))root.innerHTML=$('#tpl-dashboard').innerHTML;
+ const a=analyse(),set=(id,h)=>{const el=root.querySelector(id);if(el)el.innerHTML=h};
+ set('#dKpis',kpis(a));set('#dQueue',queue(a));set('#dExpiring',expiring(a));set('#dAudit',auditH());set('#dRooms',rooms());set('#dWeek',week());set('#dQuick',quick());
+ lucide.createIcons()}
+document.addEventListener('click',e=>{
+ const a=e.target.closest('#tab-dashboard a[data-act]');
+ if(a){const ds={...a.dataset};setTimeout(()=>{if(ds.col)S.update(ds.col,ds.id,{sentOn:D.today()});else{S.mark(ds.key);S.log('dispatch','SENT',ds.lbl+': Pending','Sent Today')}render();window.YPTRMS.toast('Marked "Sent Today"')},350);return}
+ const k=e.target.closest('#tab-dashboard [data-kpi]');
+ if(k){window.YPTRMS.crewFilter=k.dataset.kpi;document.dispatchEvent(new CustomEvent('yptrms:crew-filter',{detail:k.dataset.kpi}));
+  document.querySelector('#tabs [data-tab="crew"]').click();window.YPTRMS.toast('Crew Records filter: '+k.dataset.kpi)}});
+document.addEventListener('yptrms:login',render);
+document.addEventListener('yptrms:tab',e=>{if(e.detail==='dashboard')render()});
+setInterval(()=>{const r=$('#tab-dashboard');if(r&&r.classList.contains('active'))render()},60000);
+})();
+</script>
+<script id="module-crew">
+/* Files are stored as data-URLs in YPTRMS_V1 (images are downsized). localStorage is ~5 MB: a later step can move files to IndexedDB. */
+(()=>{
+const Y={toast:m=>window.YPTRMS.toast(m)},S=window.Store,D=window.YDate,$=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const FL=r=>r==='CAPT'||r==='F/O',REASONS=['Medical Leave','Secondment','Administrative Hold','Retired'];
+const AUTH=[['TRE','TRE Authorization',1],['TRI','TRI Authorization',1],['Ground Instructor','Ground Instructor Authorization',0]];
+const TRN={Flight:[['PC Check','OPC / Recurrent'],['Line Check','Line Check'],['SEP','SEP'],['CRM','CRM'],['DG','DG'],['SMS','SMS'],['C of T','C of T'],['ETOPS / RVSM','ETOPS / RVSM'],['CMC','CMC'],['CBT','CBT']],
+ Cabin:[['SEP / Recurrent','SEP / Recurrent'],['CRM','CRM'],['DG','DG'],['SMS','SMS'],['C of T','C of T'],['CMC','CMC'],['CBT','CBT']]};
+const KEYS=['name','staffId','rank','group','fleet','base','phone','phone2','email','avatar','passport','licType','lepLevel','medClass','docs','creds'];
+const CH=[['st','active','Active Crew'],['st','inactive','Inactive Crew'],['st','all','All Crew'],['grp','Flight','Flight Crew'],['grp','Cabin','Cabin Crew'],['fleet','A320','A320'],['fleet','A330','A330'],['val','valid','Valid'],['val','due','Due Soon'],['val','expired','Expired']];
+let F={st:'active',grp:'',fleet:'',val:''},Q='',SK='name',SD=1,M=null,PM=null,TAB=0,DD=null,tgt=null;
+const live=()=>M&&PM&&PM.isConnected;
+const ini=n=>String(n||'').replace(/^(Capt\.|F\/O)\s*/i,'').split(/\s+/).map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+const st=x=>{const d=D.daysTo(x);return d<0?'expired':d<=60?'due':'valid'};
+const bdg=k=>({valid:'<span class="bdg g">Valid</span>',due:'<span class="bdg a">Due Soon</span>',expired:'<span class="bdg r">Expired</span>',none:'<span class="bdg">No data</span>'}[k]);
+const vs=c=>{const d=(c.creds||[]).filter(x=>x.expiry).map(x=>D.daysTo(x.expiry));if(!d.length)return{k:'none',d:null};const m=Math.min(...d);return{k:m<0?'expired':m<=60?'due':'valid',d:m}};
+const norm=p=>{p=String(p||'').replace(/[\s-]/g,'');if(!p||p==='+967')return'';return p.startsWith('+')?p:'+967'+p.replace(/^0+/,'')};
+/* ---------- modal helpers ---------- */
+function modal(html,sz='',nb=0){const m=document.createElement('div');m.className='mo';m.innerHTML=`<div class="md ${sz}">${html}</div>`;$('#crewModals').appendChild(m);
+ m.addEventListener('click',e=>{if((e.target===m&&!nb)||e.target.closest('[data-x]'))m.remove()});lucide.createIcons();return m}
+function ask(msg,fn){const m=modal(`<div class="hd"><h3>Confirm</h3></div><div class="bd">${msg}</div><div class="ft"><button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" id="aOk">Delete</button></div>`,'sm');m.querySelector('#aOk').onclick=()=>{m.remove();fn()}}
+function printHtml(h){const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);f.contentDocument.write('<html><body style="font-family:Inter,Arial,sans-serif;font-size:12px">'+h+'</body></html>');f.contentDocument.close();setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),2000)},300)}
+async function preview(src,name){const img=src.startsWith('data:image');let u=src;if(!img)u=URL.createObjectURL(await(await fetch(src)).blob());
+ const dlName=(name||'document.pdf').toLowerCase().endsWith('.pdf')?(name||'document.pdf'):(name||'document')+'.pdf';
+ const m=modal(`<div class="hd"><h3 class="grow">${esc(name||'Preview')}</h3>${!img?`<a class="btn btn-tonal sm" href="${u}" target="_blank" rel="noopener"><i data-lucide="external-link" class="ico"></i>Open PDF</a><a class="btn btn-primary sm" href="${u}" download="${esc(dlName)}"><i data-lucide="download" class="ico"></i>Download PDF</a>`:''}<button class="btn btn-tonal sm" id="pp"><i data-lucide="printer" class="ico"></i>Print</button><button class="ic" data-x><i data-lucide="x" class="ico"></i></button></div><div class="pv" id="pvBox">${img?`<img src="${src}">`:`<iframe id="pvf" src="${u}"></iframe><div id="pdfCanvasWrap" style="margin-top:12px"></div>`}</div>`,'lg');
+ if(!img){try{if(!window.pdfjsLib){const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';document.head.appendChild(s);await new Promise((r,j)=>{s.onload=r;s.onerror=j})}
+  if(window.pdfjsLib){window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+   const pdf=await window.pdfjsLib.getDocument(u).promise,wrap=m.querySelector('#pdfCanvasWrap');
+   if(wrap){wrap.innerHTML='';for(let p=1;p<=pdf.numPages;p++){const pg=await pdf.getPage(p),vp=pg.getViewport({scale:1.25}),cv=document.createElement('canvas');cv.width=vp.width;cv.height=vp.height;cv.style.cssText='display:block;max-width:100%;height:auto;margin:0 auto 12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15)';await pg.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;wrap.appendChild(cv)}const ifr=m.querySelector('#pvf');if(ifr)ifr.style.display='none'}}}catch(e){}}
+ m.querySelector('#pp').onclick=()=>{if(img)printHtml(`<img src="${src}" style="max-width:100%">`);else try{const w=window.open(u,'_blank');if(w)w.onload=()=>w.print()}catch(x){Y.toast('Use Open PDF or Download PDF')}}}
+/* ---------- warning breakdown modal for expired / expiring credentials ---------- */
+function showWarningBreakdown(id){
+ const c=S.find('crew',id);if(!c)return;
+ const items=(c.creds||[]).filter(x=>x.expiry).map(x=>{const d=D.daysTo(x.expiry);return{...x,d,k:d<0?'expired':d<=60?'due':'valid'}}).sort((a,b)=>a.d-b.d);
+ const bad=items.filter(x=>x.k==='expired'||x.k==='due');
+ const rows=bad.length?bad.map(x=>`<tr><td><b>${esc(x.name)}</b></td><td>${esc(x.expiry)}</td><td>${bdg(x.k)}</td><td>${x.d<0?'Expired '+(-x.d)+' d ago':'In '+x.d+' d'}</td></tr>`).join('')
+  :'<tr><td colspan="4">No expired or due-soon credentials on file.</td></tr>';
+ const m=modal(`<div class="hd"><h3 class="grow">Credential Status — ${esc(c.name)} (${esc(c.staffId)})</h3><button class="ic" data-x><i data-lucide="x" class="ico"></i></button></div><div class="bd"><p style="margin-bottom:12px;color:var(--mut)">${esc(c.rank)} · ${esc(c.fleet)} · ${esc(c.base||'—')}</p><table class="ora"><tr><th>Credential</th><th>Expiry</th><th>Status</th><th>Timing</th></tr>${rows}</table></div><div class="ft"><button class="btn btn-tonal" data-x>Close</button><button class="btn btn-primary" id="wbOpen">Open Full Profile</button></div>`,'sm');
+ m.querySelector('#wbOpen').onclick=()=>{m.remove();openProfile(id)}}
+/* ---------- file upload / scan ---------- */
+function prep(f,mx){return new Promise((ok,no)=>{if(f.size>4e6)return no(new Error('File too large (max 4 MB)'));const r=new FileReader();r.onerror=()=>no(new Error('Could not read file'));
+ r.onload=()=>{if(!f.type.startsWith('image/'))return f.size>1.5e6?no(new Error('PDF over 1.5 MB exceeds browser storage')):ok(r.result);
+  const im=new Image();im.onerror=()=>no(new Error('Invalid image'));im.onload=()=>{const s=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.72))};im.src=r.result};r.readAsDataURL(f)})}
+async function got(e){const f=e.target.files[0];e.target.value='';if(!f||!tgt)return;try{tgt.o[tgt.f]=await prep(f,tgt.max||1100);if(tgt.n)tgt.o[tgt.n]=f.name;tgt.cb&&tgt.cb()}catch(x){Y.toast(x.message)}}
+const cr=k=>{let x=M.creds.find(c=>c.name===k);if(!x)M.creds.push(x={name:k,issue:'',expiry:''});return x};
+const peek=k=>M.creds.find(c=>c.name===k)||{},hold=k=>k==='@doc'?DD:k==='@pass'?M.passport:cr(k);
+const fbar=(k,o)=>`<div class="fb"><button class="mini nv" data-a="up" data-k="${k}"><i data-lucide="upload" class="ico"></i>Upload</button><button class="mini gy" data-a="scan" data-k="${k}"><i data-lucide="scan-line" class="ico"></i>Scan</button>${o.file?`<span class="fn" title="${esc(o.fileName)}">${esc(o.fileName)}</span><button class="mini wa" data-a="pv" data-k="${k}"><i data-lucide="eye" class="ico"></i>Preview</button><button class="mini rd" data-a="rm" data-k="${k}"><i data-lucide="trash-2" class="ico"></i>Remove</button>`:'<span class="fn" style="color:var(--mut)">No file</span>'}</div>`;
+/* ---------- table ---------- */
+function render(){const r=$('#cTbl');if(!r)return;document.querySelectorAll('#cChips .chip').forEach(b=>b.classList.toggle('on',F[b.dataset.g]===b.dataset.v));
+ const q=Q.toLowerCase().trim(),all=S.get('crew');
+ const rows=all.map(c=>({c,v:vs(c)})).filter(({c,v})=>(F.st==='all'||(F.st==='active')===(c.status==='Active'))&&(!F.grp||c.group===F.grp)&&(!F.fleet||c.fleet===F.fleet)&&(!F.val||v.k===F.val)&&(!q||[c.name,c.staffId,c.rank,c.fleet,c.base,c.email,c.phone].join(' ').toLowerCase().includes(q)));
+ const f=SK==='days'||SK==='val'?x=>x.v.d??9999:x=>String(x.c[SK]||'').toLowerCase();rows.sort((a,b)=>{const A=f(a),B=f(b);return(A>B?1:A<B?-1:0)*SD});
+ const cols=[['name','Name'],['staffId','Staff ID'],['rank','Rank'],['fleet','Fleet'],['base','Base'],['days','Next Expiry'],['val','Validity'],['status','Status']];
+ r.innerHTML='<tr>'+cols.map(([k,l])=>`<th class="s" data-s="${k}">${l}${SK===k?(SD>0?' ▲':' ▼'):''}</th>`).join('')+'<th></th></tr>'+(rows.map(({c,v})=>`<tr class="cr" data-id="${c.id}"><td><b>${esc(c.name)}</b></td><td>${esc(c.staffId)}</td><td>${esc(c.rank)}</td><td>${esc(c.fleet)}</td><td>${esc(c.base||'—')}</td><td>${v.d===null?'—':v.d<0?(-v.d)+' d ago':v.d+' d'}</td><td><span class="wb-trig" data-wb="${c.id}" title="View expiring/expired details">${bdg(v.k)}</span></td><td><button class="sw ${c.status==='Active'?'on':''}" data-sw="${c.id}" title="Toggle Active / Inactive"></button>${c.status!=='Active'&&c.reason?`<br><small style="color:var(--mut)">${esc(c.reason)}</small>`:''}</td><td style="white-space:nowrap"><button class="ic" data-open="${c.id}" title="Open profile"><i data-lucide="pencil" class="ico"></i></button><button class="ic" data-del="${c.id}" title="Delete"><i data-lucide="trash-2" class="ico"></i></button></td></tr>`).join('')||'<tr><td colspan="9">No crew match the current filters.</td></tr>');
+ $('#cCount').textContent=rows.length+' of '+all.length+' records';lucide.createIcons()}
+function setStatus(id){const c=S.find('crew',id);if(!c)return;
+ const apply=(s,r)=>{S.update('crew',id,{status:s,reason:r});if(live()&&M.id===id){M.status=s;M.reason=r;hdr()}render();Y.toast(c.name+' is now '+s)};
+ if(c.status!=='Active')return apply('Active','');
+ const m=modal(`<div class="hd"><h3>Set ${esc(c.name)} Inactive</h3></div><div class="bd"><p style="margin-bottom:12px;color:var(--mut)">Inactive crew are excluded from Dashboard alerts, Comms queues and the Planner until reactivated.</p><div class="g2"><label class="lb">Reason<select class="in" id="sR">${REASONS.map(x=>`<option>${x}</option>`).join('')}</select></label><label class="lb">Note (optional)<input class="in" id="sN"></label></div></div><div class="ft"><button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" id="sOk">Confirm Inactive</button></div>`,'sm');
+ m.querySelector('#sOk').onclick=()=>{const n=m.querySelector('#sN').value.trim();apply('Inactive',m.querySelector('#sR').value+(n?' — '+n:''));m.remove()}}
+function delCrew(id){const c=S.find('crew',id);if(c)ask(`Permanently delete <b>${esc(c.name)}</b> (${esc(c.staffId)})? This cannot be undone.`,()=>{S.remove('crew',id);if(live()&&M.id===id)PM.remove();render();Y.toast('Crew record deleted')})}
+/* ---------- profile modal ---------- */
+function openProfile(id){const o=id&&S.find('crew',id);
+ M=o?JSON.parse(JSON.stringify(o)):{id:'',name:'',staffId:'',rank:'F/O',group:'Flight',fleet:'A320',status:'Active',reason:'',base:'Aden',phone:'+967',phone2:'+967',email:'',avatar:'',licType:'',lepLevel:'',medClass:''};
+ M.passport=M.passport||{};M.docs=M.docs||[];M.creds=M.creds||[];TAB=0;
+ PM=modal(`<div class="hd" id="ph"></div><div class="mt" id="pt">${[['Info & Passport','id-card'],['Licences, LEP & Medical','badge-check'],['Training & Checks','clipboard-check'],['Documents & Attendance','folder-open']].map((t,i)=>`<button data-t="${i}"><i data-lucide="${t[1]}" class="ico"></i>${t[0]}</button>`).join('')}</div><div class="bd" id="pb"></div><div class="ft">${o?'<button class="btn btn-tonal" data-a="pdel" style="margin-right:auto">Delete</button>':''}<button class="btn btn-tonal" data-x>Close</button><button class="btn btn-primary" data-a="psave"><i data-lucide="save" class="ico"></i>Save</button></div>`,'',1);
+ hdr();renderTab()}
+function hdr(){const h=$('#ph');if(!h)return;const a=M.status==='Active';
+ h.innerHTML=`<div class="av">${M.avatar?`<img src="${M.avatar}">`:esc(ini(M.name)||'?')}</div><div class="grow"><h3>${esc(M.name||'New Crew Member')}</h3><small style="color:var(--mut)">${esc(M.rank)} · ${esc(M.staffId||'no Staff ID')} · ${esc(M.fleet)}</small></div>${M.id?`<span class="bdg ${a?'g':'a'}">${a?'Active':'Inactive'}${!a&&M.reason?' · '+esc(M.reason):''}</span><button class="btn btn-tonal sm" data-a="tgl">${a?'Set Inactive':'Reactivate'}</button>`:''}<button class="btn btn-tonal sm" data-a="prt"><i data-lucide="printer" class="ico"></i>Print</button><button class="ic" data-x><i data-lucide="x" class="ico"></i></button>`;lucide.createIcons()}
+function renderTab(){if(!live())return;document.querySelectorAll('#pt button').forEach(b=>b.classList.toggle('on',+b.dataset.t===TAB));$('#pb').innerHTML=[t0,t1,t2,t3][TAB]();lucide.createIcons()}
+const opt=(a,v)=>a.map(x=>`<option${x===v?' selected':''}>${x}</option>`).join('');
+const inp=(l,f,v,ty='text',ex='')=>`<label class="lb">${l}<input class="in" type="${ty}" data-f="${f}" value="${esc(v)}" ${ex}></label>`;
+const sel=(l,f,a,v,b)=>`<label class="lb">${l}<select class="in" data-f="${f}">${b?'<option value="">—</option>':''}${opt(a,v)}</select></label>`;
+const crRow=(l,k,pre='',iss=0)=>{const c=peek(k);return`<div class="rw"><b>${l}</b>${pre}${iss?`<label class="lb">Issue<input type="date" class="in" data-c="${k}" data-p="issue" value="${c.issue||''}"></label>`:''}<label class="lb">Expiry<input type="date" class="in" data-c="${k}" data-p="expiry" value="${c.expiry||''}"></label>${c.expiry?bdg(st(c.expiry)):''}${fbar(k,c)}</div>`};
+const t0=()=>`<div style="display:flex;gap:18px;align-items:center;margin-bottom:18px"><div class="av big">${M.avatar?`<img src="${M.avatar}">`:esc(ini(M.name)||'?')}</div><div class="fb"><button class="mini nv" data-a="av"><i data-lucide="camera" class="ico"></i>Upload Photo</button>${M.avatar?'<button class="mini rd" data-a="avrm"><i data-lucide="trash-2" class="ico"></i>Remove</button>':''}</div></div>
+<div class="g2">${inp('Full Name','name',M.name)}${inp('Staff ID','staffId',M.staffId)}${sel('Rank','rank',['CAPT','F/O','PURS','F/A'],M.rank)}${sel('Fleet','fleet',['A320','A330'],M.fleet)}${sel('Base','base',['Aden',"Sana'a"],M.base)}${inp('Email','email',M.email,'email')}${inp('Contact 1 (+967)','phone',M.phone,'tel','placeholder="+967 7XX XXX XXX"')}${inp('Contact 2 (+967)','phone2',M.phone2,'tel','placeholder="+967 7XX XXX XXX"')}</div>
+<div class="sh">Passport</div><div class="g2">${inp('Passport No.','passport.no',M.passport.no||'')}${inp('Passport Expiry','passport.expiry',M.passport.expiry||'','date')}</div><div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">${M.passport.expiry?bdg(st(M.passport.expiry)):''}${fbar('@pass',M.passport)}</div>`;
+const elpKey=()=>{if(M.creds.some(c=>c.name==='ELP'))return'ELP';if(M.creds.some(c=>c.name==='LEP'))return'LEP';return'ELP'};
+const authOpts=f=>AUTH.filter(a=>f||!a[2]).filter(a=>!M.creds.some(c=>c.name===a[1]&&c.expiry));
+const extraActive=f=>AUTH.filter(a=>f||!a[2]).filter(a=>M.creds.some(c=>c.name===a[1]&&c.expiry));
+const elpActive=()=>M.creds.some(c=>(c.name==='ELP'||c.name==='LEP')&&c.expiry)||!!M.lepLevel;
+const t1=()=>{const f=FL(M.rank),pk=f?'Licence Validity':'Cabin Attestation',mk=f?'Class 1 Medical':'Medical',ek=elpKey(),avAuth=authOpts(f),exRows=extraActive(f),hasElp=elpActive();
+ return`<div class="sh" style="margin-top:0">Primary Licence</div>${crRow(pk,pk,sel('Type','licType',f?['ATPL','CPL']:['Cabin Attestation'],M.licType,1))}
+<div class="sh">Medical</div>${crRow('Medical',mk,sel('Class','medClass',f?['Class 1','Class 2']:['Cabin Crew Medical'],M.medClass,1))}
+<div class="sh">Extra Authorizations</div>
+${exRows.map(a=>crRow(a[0],a[1])).join('')}
+${avAuth.length?`<div class="rw" style="border-bottom:0;gap:10px"><label class="lb" style="flex:1;min-width:180px">Select Authorization<select class="in" id="addAuthSel">${avAuth.map(a=>`<option value="${esc(a[1])}">${esc(a[0])} — ${esc(a[1])}</option>`).join('')}</select></label><button class="btn btn-tonal sm" type="button" data-a="addAuth" style="align-self:flex-end"><i data-lucide="plus" class="ico"></i>Add Authorization</button></div>`:'<small style="color:var(--mut)">All available authorizations added.</small>'}
+<div class="sh">English Language Proficiency (ELP)</div>
+${hasElp?crRow('ELP',ek,sel('Level','lepLevel',['Level 4','Level 5','Level 6'],M.lepLevel,1)):`<div class="rw" style="border-bottom:0;gap:10px"><label class="lb" style="flex:1;min-width:180px">Select ELP Level<select class="in" id="addElpLvl"><option value="">—</option>${opt(['Level 4','Level 5','Level 6'],M.lepLevel)}</select></label><button class="btn btn-tonal sm" type="button" data-a="addElp" style="align-self:flex-end"><i data-lucide="plus" class="ico"></i>Add ELP</button></div>`}`};
+const t2=()=>`<p style="color:var(--mut);margin-bottom:6px">${FL(M.rank)?'Flight crew':'Cabin crew'} checks. Badges: Valid · Due Soon (within 60 days) · Expired. Rows without an expiry date are not saved.</p>`+TRN[FL(M.rank)?'Flight':'Cabin'].map(([l,k])=>crRow(l,k,'',1)).join('');
+const docBtns=d=>`<div class="fb" style="gap:6px;flex-wrap:wrap"><button class="btn btn-tonal sm" type="button" data-a="dpv" data-i="${d.id}" title="Preview / PDF"><i data-lucide="eye" class="ico"></i>View</button><button class="btn btn-tonal sm" type="button" data-a="dpr" data-i="${d.id}" title="Print"><i data-lucide="printer" class="ico"></i>Print</button><button class="ic" type="button" data-a="ddl" data-i="${d.id}" title="Delete"><i data-lucide="trash-2" class="ico"></i></button></div>`;
+const t3=()=>`<div class="tb"><h3 style="margin:0;font-size:15px;color:var(--navy)">Documents &amp; Attendance</h3><span class="bdg">${M.docs.filter(d=>d.category==='Attendance Record').length} attendance record(s)</span><div class="grow"></div><button class="btn btn-primary sm" data-a="dadd"><i data-lucide="plus" class="ico"></i>Add Document</button></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="ora" style="min-width:520px"><tr><th>Title</th><th>Category</th><th>Date</th><th>Notes</th><th>Actions</th></tr>${M.docs.map(d=>`<tr><td><b>${esc(d.title)}</b>${d.fileName?`<br><small style="color:var(--mut)">${esc(d.fileName)}</small>`:''}</td><td>${esc(d.category)}</td><td>${esc(d.date)}</td><td>${esc(d.notes||'—')}</td><td>${docBtns(d)}</td></tr>`).join('')||'<tr><td colspan="5">No documents yet.</td></tr>'}</table></div>${M.id?'':'<small style="color:var(--mut)">Documents are saved together with the new profile.</small>'}`;
+const commitDocs=()=>{if(M.id)S.update('crew',M.id,{docs:M.docs})};
+const docCats=()=>{const l=(S.get('docTypes')||[]).map(x=>x.name);return l.length?l:['Training Certificate','Attendance Record','Licence Copy','Medical Report','Correspondence','Other']};
+function addDoc(){const cats=docCats();DD={id:Math.random().toString(36).slice(2,9),title:'',category:cats[0]||'Training Certificate',date:D.today(),notes:''};
+ const m=modal(`<div class="hd"><h3>Add Document</h3></div><div class="bd"><div class="g2"><label class="lb">Title<input class="in" data-d="title"></label><label class="lb">Category<select class="in" data-d="category">${opt(cats,DD.category)}</select></label><label class="lb">Date<input type="date" class="in" data-d="date" value="${DD.date}"></label></div><label class="lb" style="margin-top:14px">Notes<textarea class="in" data-d="notes"></textarea></label><div id="dfb" style="margin-top:14px">${fbar('@doc',DD)}</div></div><div class="ft"><button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" id="dOk">Save Document</button></div>`,'sm',1);
+ m.addEventListener('input',e=>{if(e.target.dataset.d)DD[e.target.dataset.d]=e.target.value});
+ m.querySelector('#dOk').onclick=()=>{if(!DD.title.trim())return Y.toast('Document title is required');M.docs.push(DD);commitDocs();m.remove();renderTab()}}
+const docPrint=d=>d.file&&!d.file.startsWith('data:image')?preview(d.file,d.fileName||d.title):printHtml(`<h2>${esc(d.title)}</h2><p>${esc(d.category)} · ${esc(d.date)}</p><p>${esc(d.notes)}</p>${d.file?`<img src="${d.file}" style="max-width:100%">`:''}`);
+function printProfile(){printHtml(`<h2>${esc(M.name)} — ${esc(M.rank)} ${esc(M.fleet)}</h2><p>Staff ID ${esc(M.staffId)} · Base ${esc(M.base)} · ${esc(M.status)}${M.reason?' ('+esc(M.reason)+')':''}<br>${esc(M.phone)} ${esc(M.phone2)} ${esc(M.email)}<br>Passport ${esc(M.passport.no||'—')} exp ${esc(M.passport.expiry||'—')}</p><table border="1" cellpadding="5" style="border-collapse:collapse;width:100%"><tr><th>Credential</th><th>Issue</th><th>Expiry</th><th>Status</th></tr>${M.creds.filter(c=>c.expiry).map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.issue||'—')}</td><td>${esc(c.expiry)}</td><td>${st(c.expiry)}</td></tr>`).join('')}</table><h3>Documents</h3><ul>${M.docs.map(d=>`<li>${esc(d.title)} — ${esc(d.category)} (${esc(d.date)})</li>`).join('')}</ul><small>YPTRMS · ${new Date().toLocaleString('en-GB')}</small>`)}
+function save(){const d=M,n=d.creds.length;
+ if(!d.name.trim()||!d.staffId.trim())return Y.toast('Name and Staff ID are required');
+ if(S.get('crew').some(c=>c.staffId===d.staffId.trim()&&c.id!==d.id))return Y.toast('Staff ID already in use');
+ d.name=d.name.trim();d.staffId=d.staffId.trim();d.group=FL(d.rank)?'Flight':'Cabin';d.phone=norm(d.phone);d.phone2=norm(d.phone2);d.creds=d.creds.filter(x=>x.expiry||(d.lepLevel&&(x.name==='ELP'||x.name==='LEP')));
+ const P={};KEYS.forEach(k=>P[k]=d[k]);
+ if(d.id){const f=x=>(x.creds||[]).map(c=>c.name+': '+c.expiry).sort().join('; ')||'—',b=f(S.find('crew',d.id));S.update('crew',d.id,P);if(b!==f(d))S.log('crew','CREDENTIALS '+d.name,b,f(d))}
+ else S.add('crew',{...P,status:'Active',reason:''});
+ PM.remove();render();Y.toast('Saved '+d.name+(n>d.creds.length?' — '+(n-d.creds.length)+' row(s) without expiry skipped':''))}
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{const t=e.target;
+ const tb=t.closest('#pt [data-t]');if(tb){TAB=+tb.dataset.t;return renderTab()}
+ const root=t.closest('#tab-crew');if(root){
+  const wb=t.closest('[data-wb]');if(wb){e.stopPropagation();return showWarningBreakdown(wb.dataset.wb)}
+  const ch=t.closest('.chip');if(ch){const{g,v}=ch.dataset;F[g]=g==='st'?v:(F[g]===v?'':v);return render()}
+  const th=t.closest('th[data-s]');if(th){SD=SK===th.dataset.s?-SD:1;SK=th.dataset.s;return render()}
+  const sw=t.closest('[data-sw]');if(sw)return setStatus(sw.dataset.sw);
+  const dl=t.closest('[data-del]');if(dl)return delCrew(dl.dataset.del);
+  if(t.closest('#cAdd'))return openProfile();
+  const tr=t.closest('tr.cr');if(tr)return openProfile(tr.dataset.id)}
+ const b=t.closest('[data-a]');if(!b)return;const a=b.dataset.a,k=b.dataset.k;if(!(k==='@doc'?DD:live()))return;
+ if(a==='up'||a==='scan'||a==='av'){const isDoc=k==='@doc';
+  tgt=a==='av'?{o:M,f:'avatar',n:null,max:320,cb:()=>{renderTab();hdr()}}:{o:hold(k),f:'file',n:'fileName',cb:isDoc?()=>{$('#dfb').innerHTML=fbar('@doc',DD);lucide.createIcons()}:renderTab};
+  return $(a==='scan'?'#crewScan':'#crewFile').click()}
+ if(a==='pv'){const h=hold(k);return h.file&&preview(h.file,h.fileName)}
+ if(a==='rm'){const h=hold(k);delete h.file;delete h.fileName;if(k==='@doc'){$('#dfb').innerHTML=fbar('@doc',DD);return lucide.createIcons()}return renderTab()}
+ if(!live())return;
+ if(a==='avrm'){M.avatar='';renderTab();return hdr()}
+ if(a==='addAuth'){const s=$('#addAuthSel');if(!s||!s.value)return;cr(s.value);return renderTab()}
+ if(a==='addElp'){const s=$('#addElpLvl');if(s&&s.value)M.lepLevel=s.value;cr('ELP');return renderTab()}
+ if(a==='tgl')return setStatus(M.id);if(a==='prt')return printProfile();if(a==='psave')return save();if(a==='pdel')return delCrew(M.id);if(a==='dadd')return addDoc();
+ const d=M.docs.find(x=>x.id===b.dataset.i);if(!d)return;
+ if(a==='dpv')return d.file?preview(d.file,d.fileName||d.title):Y.toast('No file attached');
+ if(a==='dpr')return docPrint(d);
+ if(a==='ddl')ask(`Delete document <b>${esc(d.title)}</b>?`,()=>{M.docs=M.docs.filter(x=>x!==d);commitDocs();renderTab()})});
+document.addEventListener('input',e=>{const t=e.target;if(!live()||!t.closest('#pb'))return;
+ if(t.dataset.f){const p=t.dataset.f.split('.');p.length>1?M[p[0]][p[1]]=t.value:M[p[0]]=t.value;if(p[0]==='name')hdr()}else if(t.dataset.c){const row=cr(t.dataset.c);row[t.dataset.p]=t.value;if(t.dataset.p==='issue'&&t.value){const k=t.dataset.c.toLowerCase();const c=(S.get('courses')||[]).find(x=>{const n=(x.name||'').toLowerCase();return n===k||n.includes(k)||k.includes(n)||(k==='dg'&&n.includes('dangerous'))||(k.includes('opc')&&n.includes('recurrent'))});const m=parseInt(c&&c.validity,10);if(m>0){const[y,mo,d]=t.value.split('-').map(Number);const dt=new Date(Date.UTC(y,mo-1+m,d));row.expiry=dt.toISOString().slice(0,10)}}}});
+document.addEventListener('change',e=>{const t=e.target;if(!live()||!t.closest('#pb'))return;
+ if(t.dataset.f==='rank'){M.group=FL(M.rank)?'Flight':'Cabin';M.licType='';M.medClass='';renderTab();hdr()}else if(t.dataset.c||t.dataset.f==='passport.expiry')renderTab()});
+/* ---------- boot ---------- */
+$('#tab-crew').innerHTML=$('#tpl-crew').innerHTML;$('#modal-root').insertAdjacentHTML('beforeend',$('#tpl-crew-modal').innerHTML);
+$('#cChips').innerHTML=CH.map(([g,v,l])=>`<button class="chip" data-g="${g}" data-v="${v}">${l}</button>`).join('');
+$('#crewFile').onchange=got;$('#crewScan').onchange=got;
+$('#cQ').oninput=e=>{Q=e.target.value;$('#globalSearch').value=Q;render()};
+$('#globalSearch').addEventListener('input',e=>{Q=e.target.value;$('#cQ').value=Q;if(Q&&$('#tab-dashboard').classList.contains('active'))$('#tabs [data-tab="crew"]').click();else render()});
+document.addEventListener('yptrms:tab',e=>{if(e.detail==='crew'){$('#cQ').value=Q;render()}});
+document.addEventListener('yptrms:crew-filter',e=>{const v=e.detail;F={st:v==='inactive'?'inactive':'active',grp:'',fleet:'',val:v==='due'||v==='expired'?v:''};Q='';$('#cQ').value='';$('#globalSearch').value='';render()});
+document.addEventListener('yptrms:login',()=>{window.YPTRMS.activeCrew=()=>S.get('crew').filter(c=>c.status==='Active');render()});
+lucide.createIcons();
+})();
+</script>
+<script id="module-pdf-settings">
+(()=>{
+const Y=new Proxy({},{get:(_,k)=>window.YPTRMS[k]}),S=window.Store,D=window.YDate,$=s=>document.querySelector(s),p2=n=>String(n).padStart(2,'0');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const NAVY=[10,30,70],RED=[215,25,32],AMB=[180,83,9],MUT=[100,116,139],L=s=>String(s??'').replace(/→/g,'->').replace(/[^ -~ -ÿ–—]/g,'?');
+/* ---------- PDF engine (jsPDF is loaded on first use) ---------- */
+let jsP=null,cur=null,zoom=100,url='';
+const needPdf=()=>window.jspdf?Promise.resolve():(jsP=jsP||new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=ok;s.onerror=()=>{jsP=null;no(new Error('Could not load jsPDF (offline?)'))};document.head.appendChild(s)}));
+function build(title,code,orient,fn){
+ const doc=new window.jspdf.jsPDF({orientation:orient,unit:'pt',format:'a4'}),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),n=new Date(),u=Y.STATE.session;
+ const by=u?u.name+' ('+u.id+')':'-',ref='YPTRMS/'+code+'/'+D.today().replace(/-/g,'')+'-'+p2(n.getHours())+p2(n.getMinutes());let y=0;
+ const T=(s,x,yy,sz,b,c,al)=>{doc.setFont('helvetica',b?'bold':'normal');doc.setFontSize(sz);doc.setTextColor(...(c||[15,23,42]));doc.text(L(s),x,yy,{align:al||'left'})};
+ const head=()=>{doc.setFillColor(...NAVY);doc.rect(0,0,W,78,'F');doc.setFillColor(...RED);doc.rect(0,78,W,6,'F');
+  const em=Y.load().emblem;let ok=0;if(em)try{doc.addImage(em,((em.match(/^data:image\/(\w+)/)||[])[1]||'PNG').toUpperCase(),24,12,54,54);ok=1}catch(e){}
+  if(!ok){doc.setFillColor(255,255,255);doc.circle(51,39,26,'F');T('YE',51,45,16,1,NAVY,'center')}
+  T('YEMENIA AIRWAYS – FLIGHT OPERATIONS TRAINING DEPARTMENT',92,34,11,1,[255,255,255]);T(title,92,58,15,1,[255,255,255]);
+  T('Doc Ref No.: '+ref,24,100,8,0,MUT);T('Generated: '+n.toLocaleString('en-GB'),W/2,100,8,0,MUT,'center');T('Generated By: '+by,W-24,100,8,0,MUT,'right');
+  doc.setDrawColor(226,232,240);doc.line(24,107,W-24,107);y=126};
+ const table=(cols,rows)=>{const tw=W-48,sum=cols.reduce((a,c)=>a+c[1],0),ws=cols.map(c=>c[1]*tw/sum);
+  const hdr=()=>{doc.setFillColor(238,242,247);doc.rect(24,y,tw,20,'F');let x=24;cols.forEach((c,i)=>{T(c[0].toUpperCase(),x+5,y+13,7.5,1,NAVY);x+=ws[i]});doc.setDrawColor(203,213,225);doc.rect(24,y,tw,20);y+=20};
+  hdr();rows.forEach((r,ri)=>{doc.setFont('helvetica','normal');doc.setFontSize(8);
+   const cells=cols.map((_,i)=>doc.splitTextToSize(L(r[i]&&r[i].t!==undefined?r[i].t:r[i]),ws[i]-10)),h=Math.max(...cells.map(c=>c.length))*10+8;
+   if(y+h>H-40){doc.addPage();head();hdr()}
+   if(ri%2){doc.setFillColor(248,250,252);doc.rect(24,y,tw,h,'F')}
+   let x=24;cells.forEach((c,i)=>{const col=r[i]&&r[i].c;doc.setFont('helvetica',col?'bold':'normal');doc.setFontSize(8);doc.setTextColor(...(col||[15,23,42]));doc.text(c,x+5,y+12);doc.setDrawColor(226,232,240);doc.rect(x,y,ws[i],h);x+=ws[i]});y+=h});
+  if(!rows.length){T('No records.',29,y+14,9,0,MUT);y+=24}y+=10};
+ const api={table,gap:v=>{y+=v},sec:s=>{if(y>H-90){doc.addPage();head()}y+=6;T(s.toUpperCase(),24,y,9,1,RED);y+=14},
+  line:(s,sz=9,b)=>{doc.setFont('helvetica',b?'bold':'normal');doc.setFontSize(sz);doc.splitTextToSize(L(s),W-48).forEach(l=>{if(y>H-50){doc.addPage();head()}T(l,24,y,sz,b);y+=sz+5})}};
+ head();fn(api);const np=doc.getNumberOfPages();
+ for(let i=1;i<=np;i++){doc.setPage(i);T('YPTRMS – Confidential – Internal Use Only',24,H-20,7.5,0,MUT);T('Page '+i+' of '+np,W-24,H-20,7.5,0,MUT,'right')}
+ return{doc,np,ref}}
+const frame=()=>{$('#pdfZoom').textContent=zoom+'%';$('#pdfBox').innerHTML='<iframe id="pdfFrame" title="PDF preview" style="width:100%;height:100%;border:0" src="'+url+'#toolbar=0&zoom='+zoom+'"></iframe>'};
+async function openPdf(title,code,orient,fn){
+ try{await needPdf();const r=build(title,code,orient,fn);if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(r.doc.output('blob'));
+  cur={doc:r.doc,file:'YPTRMS-'+code+'-'+D.today()+'.pdf'};zoom=100;$('#pdfTitle').textContent=title;$('#pdfPages').textContent=r.np+' page'+(r.np>1?'s':'')+' · '+r.ref;
+  frame();$('#pdfModal').classList.remove('hidden');S.log('report','GENERATE',null,title)}catch(e){console.error(e);Y.toast('PDF failed: '+e.message)}}
+const closePdf=()=>{$('#pdfModal').classList.add('hidden');$('#pdfBox').innerHTML='';if(url)URL.revokeObjectURL(url);url=''};
+/* ---------- Reports ---------- */
+const CR={Flight:['Licence Validity','Class 1 Medical','OPC / Recurrent'],Cabin:['Cabin Attestation','Medical','SEP / Recurrent']};
+const sc=d=>d<0?RED:d<=60?AMB:null,st=c=>{const d=(c.creds||[]).filter(x=>x.expiry).map(x=>D.daysTo(x.expiry));if(!d.length)return{t:'NO DATA'};const m=Math.min(...d);return m<0?{t:'EXPIRED',c:RED}:m<=60?{t:'DUE SOON',c:AMB}:{t:'VALID',c:[22,101,52]}};
+const ex=(c,k)=>{const x=(c.creds||[]).find(z=>z.name===k);if(!x||!x.expiry)return'—';const d=D.daysTo(x.expiry);return{t:x.expiry+' ('+d+'d)',c:sc(d)}};
+const byName=(a,b)=>a.name.localeCompare(b.name);
+const REP={
+ matrix(){const a=S.get('crew').filter(c=>c.status==='Active').sort((x,y)=>x.group.localeCompare(y.group)||byName(x,y)),s=a.map(st),n=t=>s.filter(x=>x.t===t).length;
+  openPdf('Crew Compliance Matrix','CCM','l',p=>{p.line('Active crew: '+a.length+'   Valid: '+n('VALID')+'   Due soon (<=60 d): '+n('DUE SOON')+'   Expired: '+n('EXPIRED')+'   No data: '+n('NO DATA'),9,1);p.gap(6);
+   p.table([['Name',22],['Staff ID',9],['Rank',6],['Fleet',6],['Base',7],['Licence / Attestation',16],['Medical',16],['OPC / SEP',16],['Status',9]],a.map((c,i)=>[c.name,c.staffId,c.rank,c.fleet,c.base||'—',...CR[c.group].map(k=>ex(c,k)),s[i]]))})},
+ inactive(){const a=S.get('crew').filter(c=>c.status!=='Active').sort(byName);
+  openPdf('Inactive Crew Roster','ICR','p',p=>{p.line('Inactive crew: '+a.length+' – excluded from alerts, comms queues and planning until reactivated.',9,1);p.gap(6);
+   p.table([['Name',24],['Staff ID',10],['Rank',8],['Fleet',8],['Base',9],['Reason',20],['Contact',21]],a.map(c=>[c.name,c.staffId,c.rank,c.fleet,c.base||'—',c.reason||'—',c.phone||c.email||'—']))})},
+ dossier(){const c=S.find('crew',$('#repCrew').value);if(!c)return Y.toast('Select a crew member first');const pp=c.passport||{};
+  openPdf('Crew Profile Dossier — '+c.name,'DOS','p',p=>{p.sec('Personal');p.line(c.rank+' '+c.name+'  |  Staff ID '+c.staffId+'  |  '+c.fleet+'  |  Base '+(c.base||'—'),10,1);
+   p.line('Status: '+c.status+(c.reason?' ('+c.reason+')':'')+'   Contact: '+([c.phone,c.phone2,c.email].filter(Boolean).join(' / ')||'—'),9);p.line('Passport: '+(pp.no||'—')+'   Expiry: '+(pp.expiry||'—'),9);
+   p.sec('Licences, medical and checks');p.table([['Credential',30],['Issue',16],['Expiry',16],['Days left',12],['Status',14]],(c.creds||[]).filter(x=>x.expiry).map(x=>{const d=D.daysTo(x.expiry);return[x.name,x.issue||'—',x.expiry,{t:String(d),c:sc(d)},{t:d<0?'EXPIRED':d<=60?'DUE SOON':'VALID',c:sc(d)}]}));
+   p.sec('Documents');p.table([['Title',30],['Category',20],['Date',14],['Notes',36]],(c.docs||[]).map(d=>[d.title,d.category,d.date,d.notes||'—']))})},
+ audit(){const a=S.get('audit');openPdf('Audit Log','AUD','l',p=>{p.line('Entries: '+a.length+' (most recent first)',9,1);p.gap(6);
+   p.table([['Timestamp',14],['User',14],['Staff ID',8],['Area',9],['Action',16],['Before',20],['After',20]],a.map(e=>[new Date(e.ts).toLocaleString('en-GB'),e.user,e.staffId,e.col,e.action,e.before,e.after]))})},
+ csv(){const q=v=>{let s=String(v??'');if(/^[=+\-@\t\r\n]/.test(s))s="'"+s;return'"'+s.replace(/"/g,'""')+'"'};
+  const rows=[['Timestamp','User','Staff ID','Area','Action','Before','After'],...S.get('audit').map(e=>[e.ts,e.user,e.staffId,e.col,e.action,e.before,e.after])];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv'}));a.download='YPTRMS-audit-'+D.today()+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);S.log('report','EXPORT',null,'Audit CSV')}};
+function renderRep(){const sel=$('#repCrew'),v=sel.value;sel.innerHTML=S.get('crew').slice().sort(byName).map(c=>`<option value="${c.id}">${esc(c.name)} (${esc(c.staffId)})${c.status==='Active'?'':' – inactive'}</option>`).join('');if(v)sel.value=v;lucide.createIcons()}
+/* ---------- Generic CRUD sections (Facilities) ---------- */
+const CFG={
+ rooms:{t:'Aden Training Rooms',s:'Room',i:'door-open',cols:[['name','Room'],['capacity','Capacity'],['override','Status',r=>r.override||'Auto'],['note','Note']],f:[['name','Room name'],['capacity','Capacity','number'],['override','Status override','select',['Auto','Maintenance']],['note','Note']],req:['name'],num:['capacity'],v:p=>+p.capacity>0?'':'Capacity must be a positive number'},
+ fss:{t:'External FSS Providers',s:'Provider',i:'monitor-play',cols:[['name','Provider'],['poc','POC Name'],['whatsapp','WhatsApp'],['email','Email'],['leadDays','Lead Time',r=>r.leadDays?r.leadDays+' d':'Default']],f:[['name','Provider'],['poc','POC name'],['whatsapp','WhatsApp (+country code)','tel'],['email','Email','email'],['leadDays','Lead override (days, blank = default)','number']],req:['name'],num:['leadDays'],v:p=>p.leadDays&&!(+p.leadDays>=1)?'Lead time must be 1 day or more':''},
+ contacts:{t:'Crew Control & Flight Scheduling Contacts',s:'Contact',i:'phone-call',cols:[['dept','Department'],['name','Contact'],['phone','Phone / WhatsApp'],['email','Email']],f:[['dept','Department','select',['Crew Control','Flight Scheduling']],['name','Contact name'],['phone','Phone / WhatsApp','tel'],['email','Email','email']],req:['name']}};
+const card=(k,extra='')=>{const c=CFG[k];return`<div class="card"><div class="tb"><h3 style="margin:0"><i data-lucide="${c.i}" class="ico"></i>${c.t}</h3><div class="grow"></div><button class="btn btn-primary sm" data-add="${k}"><i data-lucide="plus" class="ico"></i>Add</button></div>${extra}<div style="overflow:auto"><table class="ora"><tr>${c.cols.map(x=>`<th>${x[1]}</th>`).join('')}<th></th></tr>${S.get(k).map(r=>`<tr>${c.cols.map(x=>`<td>${esc(x[2]?x[2](r):(r[x[0]]||'—'))}</td>`).join('')}<td style="white-space:nowrap"><button class="ic" data-edit="${k}:${r.id}" title="Edit"><i data-lucide="pencil" class="ico"></i></button><button class="ic" data-del="${k}:${r.id}" title="Delete"><i data-lucide="trash-2" class="ico"></i></button></td></tr>`).join('')||`<tr><td colspan="${c.cols.length+1}">No records.</td></tr>`}</table></div></div>`};
+function dlg(title,body,okText,onOk,cls='',sz='sm'){const m=document.createElement('div');m.className='mo';
+ m.innerHTML=`<div class="md ${sz}" style="max-width:600px"><div class="hd"><h3>${title}</h3></div><div class="bd ${cls}">${body}</div><div class="ft"><button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" data-ok>${okText}</button></div></div>`;
+ m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-x]'))m.remove()});m.querySelector('[data-ok]').onclick=()=>{if(onOk(m)!==false)m.remove()};$('#modal-root').appendChild(m)}
+function form(k,id){const c=CFG[k],o=id?S.find(k,id):{};
+ dlg((id?'Edit ':'Add ')+c.s,c.f.map(([f,l,t,op])=>`<label class="lb">${l}${t==='select'?`<select class="in" data-k="${f}">${op.map(v=>`<option${v===(o[f]||op[0])?' selected':''}>${v}</option>`).join('')}</select>`:`<input class="in" data-k="${f}" type="${t||'text'}" value="${esc(o[f]??'')}">`}</label>`).join(''),'Save',m=>{
+  const p={};m.querySelectorAll('[data-k]').forEach(e=>p[e.dataset.k]=e.value.trim());
+  for(const f of c.req||[])if(!p[f]){Y.toast('Required: '+c.f.find(x=>x[0]===f)[1]);return false}
+  const err=c.v&&c.v(p,id);if(err){Y.toast(err);return false}
+  if(p.override==='Auto')p.override='';(c.num||[]).forEach(f=>p[f]=p[f]===''?null:Number(p[f]));
+  id?S.update(k,id,p):S.add(k,Object.assign(c.d?c.d():{},p));renderFac();Y.toast(c.s+' saved')},'g2','')}
+function del(k,id){const r=S.find(k,id);if(!r)return;
+ dlg('Confirm delete',`Delete <b>${esc(r.name||r.code||r.dept)}</b> from ${esc(CFG[k].t)}? This cannot be undone.`,'Delete',()=>{S.remove(k,id);renderFac();Y.toast('Deleted')})}
+function renderFac(){const lead=`<div class="rw" style="border:0"><label class="lb">Default FSS lead time (days)<input type="number" class="in" id="fssLead" min="1" max="365" value="${S.get('settings').fssLead}" style="width:170px"></label><button class="btn btn-tonal sm" id="fssLeadSave">Save</button><small style="color:var(--mut);flex:1;min-width:200px">Providers are contact-only (POC, WhatsApp, Email). No portals or passwords are stored.</small></div>`;
+ $('#facBody').innerHTML=card('rooms')+card('fss',lead)+card('contacts');lucide.createIcons()}
+document.addEventListener('click',e=>{const t=e.target;
+ const rp=t.closest('#tab-reports [data-rep]');if(rp)return REP[rp.dataset.rep]();
+ if(!t.closest('#tab-facilities'))return;
+ const ad=t.closest('[data-add]');if(ad)return form(ad.dataset.add);
+ const ed=t.closest('[data-edit]');if(ed)return form(...ed.dataset.edit.split(':'));
+ const dl=t.closest('[data-del]');if(dl)return del(...dl.dataset.del.split(':'));
+ if(t.closest('#fssLeadSave')){const v=parseInt($('#fssLead').value,10);if(!(v>=1&&v<=365))return Y.toast('Enter 1–365 days');const s=S.get('settings'),o=s.fssLead;s.fssLead=v;S.log('settings','FSS LEAD TIME','fssLead: '+o,'fssLead: '+v);return Y.toast('Default FSS lead time: '+v+' days')}});
+/* FIX: PDF modal markup must exist before its buttons are wired (previously null -> script aborted, Facilities/Reports never mounted) */
+$('#modal-root').insertAdjacentHTML('beforeend',$('#tpl-pdf').innerHTML);
+$('#pdfZo').onclick=()=>{zoom=Math.max(50,zoom-25);frame()};$('#pdfZi').onclick=()=>{zoom=Math.min(300,zoom+25);frame()};$('#pdfX').onclick=closePdf;
+$('#pdfDl').onclick=()=>cur&&cur.doc.save(cur.file);
+$('#pdfPrint').onclick=()=>{try{const w=$('#pdfFrame').contentWindow;w.focus();w.print()}catch(e){window.open(url,'_blank')}};
+/* ---------- Boot ---------- */
+[['facilities','tpl-fac'],['reports','tpl-rep'],['settings','tpl-set']].forEach(([t,i])=>$('#tab-'+t).innerHTML=$('#'+i).innerHTML);
+document.addEventListener('yptrms:login',()=>{renderFac();renderRep()});
+document.addEventListener('yptrms:tab',e=>{({facilities:renderFac,reports:renderRep})[e.detail]?.()});
+lucide.createIcons();
+})();
+</script>
+<script id="module-excel-import">
+/* Assumptions: ambiguous dates are read day-first (dd/mm/yyyy); a 5-digit year (20203) is repaired by dropping the last digit, so verify the repaired list in the preview;
+   placeholder/NaN dates are never written (existing data is kept); new crew need Staff ID + a valid rank; PC / Line / ETOPS columns are ignored for cabin crew;
+   credentials with an issue date but no expiry are not stored (the dashboard needs expiry dates). */
+(()=>{
+const Y=new Proxy({},{get:(_,k)=>window.YPTRMS[k]}),S=window.Store,$=s=>document.querySelector(s),p2=n=>String(n).padStart(2,'0');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const up=v=>String(v??'').toUpperCase(),nk=v=>up(v).replace(/[^A-Z0-9]/g,''),FL=r=>r==='CAPT'||r==='F/O',cap=s=>s.length>900?s.slice(0,897)+'…':s;
+const PH=new Set(['1900-12-31','1901-01-31','1902-01-31','1900-07-31']),MON='jan feb mar apr may jun jul aug sep oct nov dec'.split(' ');
+let XL=null;
+const needXl=()=>window.XLSX?Promise.resolve():(XL=XL||new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js';s.onload=ok;s.onerror=()=>{XL=null;no(new Error('Could not load SheetJS (offline?)'))};document.head.appendChild(s)}));
+/* ---------- date repair ---------- */
+const iso=(y,m,d)=>{const t=new Date(Date.UTC(y,m-1,d));return t.getUTCFullYear()===y&&t.getUTCMonth()===m-1&&t.getUTCDate()===d?y+'-'+p2(m)+'-'+p2(d):null};
+function pdate(v){
+ let s=String(v??'').trim();
+ if((typeof v==='number'&&isNaN(v))||/^nan$/i.test(s))return{st:'ph'};
+ if(!s||/^(n\/?a|null|undefined|-+|—)$/i.test(s))return{st:'empty'};
+ let d,m,y,fx=0,r=null;
+ if(typeof v==='number'||/^\d{5}(\.\d+)?$/.test(s)){const n=Math.floor(+s);
+  if(!(n>=0&&n<=80000)||(typeof v!=='number'&&(n<30000||n>70000)))return{st:'bad'};
+  const t=new Date(Date.UTC(1899,11,30)+n*864e5);r=iso(t.getUTCFullYear(),t.getUTCMonth()+1,t.getUTCDate());fx=typeof v!=='number'?1:0}
+ else{s=s.replace(/[ T]\d{1,2}:\d{2}(:\d{2})?.*$/,'').replace(/[A-Za-z]{3,}/g,w=>{const i=MON.indexOf(w.slice(0,3).toLowerCase());return i<0?'?':i+1});
+  if(/[^\d\/\-.\s,]/.test(s))return{st:'bad'};
+  fx=/[\/\-.]{2,}/.test(s)?1:0;
+  const p=s.split(/[\/\-.\s,]+/).filter(Boolean);
+  if(p.length===3){const[a,b,c]=p;if(a.length===4)[y,m,d]=[a,b,c];else[d,m,y]=[a,b,c]}
+  else if(p.length===2){d=p[0];const b=p[1];if(b.length===3){m=b[0];y=b.slice(1)}else if(b.length===4||b.length===6){m=b.slice(0,2);y=b.slice(2)}else return{st:'bad'};fx=1}
+  else if(p.length===1&&/^(\d{8}|\d{6})$/.test(p[0])){const x=p[0];d=x.slice(0,2);m=x.slice(2,4);y=x.slice(4);fx=1}
+  else return{st:'bad'};
+  if(y.length===2)y='20'+y;else if(y.length>4){y=y.slice(0,4);fx=1}else if(y.length!==4)return{st:'bad'};
+  let M=+m,Dd=+d;if(M>12&&Dd<=12){[M,Dd]=[Dd,M];fx=1}
+  r=iso(+y,M,Dd)}
+ if(!r)return{st:'bad'};
+ if(PH.has(r)||+r.slice(0,4)<1980)return{st:'ph'};
+ if(+r.slice(0,4)>2100)return{st:'bad'};
+ return{st:fx?'fix':'ok',v:r}}
+/* ---------- phones, ranks, credential names ---------- */
+function fmtPhone(v){let d=String(typeof v==='number'?Math.round(v):v).trim();if(/^\+967[\s-]?\d{9}$/.test(d.replace(/\s/g,'')))return d.replace(/[\s-]/g,'');d=d.replace(/\D/g,'');
+ if(/^\d{9}$/.test(d))return'+967'+d;if(/^967\d{9}$/.test(d))return'+'+d;if(/^00967\d{9}$/.test(d))return'+'+d.slice(2);if(/^0\d{9}$/.test(d))return'+967'+d.slice(1);return null}
+const RK=v=>{const t=nk(v);return/^(CAPT|CAPTAIN|CPT)$/.test(t)?'CAPT':/^(FO|FIRSTOFFICER|COPILOT)$/.test(t)?'F/O':/^(PURS|PURSER)$/.test(t)?'PURS':/^(FA|FLIGHTATTENDANT|CABINCREW)$/.test(t)?'F/A':''};
+const CID=[[/^LIC/,'LIC'],[/^LEP/,'LEP'],[/MED/,'MED'],[/^LINE/,'LINE'],[/^(PC|OPC|PROF)/,'PC'],[/^SEP/,'SEP'],[/^CRM/,'CRM'],[/^(DG|DANGER)/,'DG'],[/^SMS/,'SMS'],[/^COF?T/,'COT'],[/ETOPS|RVSM/,'ETOPS'],[/^CMC/,'CMC'],[/^CBT/,'CBT']];
+const CN=(id,fl)=>({LIC:fl?'Licence Validity':'Cabin Attestation',MED:fl?'Class 1 Medical':'Medical',PC:fl?'OPC / Recurrent':null,LINE:fl?'Line Check':null,SEP:fl?'SEP':'SEP / Recurrent',COT:'C of T',ETOPS:fl?'ETOPS / RVSM':null,LEP:'LEP',CRM:'CRM',DG:'DG',SMS:'SMS',CMC:'CMC',CBT:'CBT'}[id]||null);
+/* ---------- header detection (dual Issue / Expiry blocks) ---------- */
+function headerMap(rows){
+ for(let h=0;h<Math.min(rows.length,25);h++){const hr=rows[h];if(hr.filter(c=>String(c).trim()).length<4||!hr.some(c=>nk(c).includes('NAME')))continue;
+  const grp=[];[h-1,h-2].forEach(ri=>{if(ri<0)return;let cur='';rows[ri].forEach((c,i)=>{const t=up(c);if(/ISSU/.test(t))cur='issue';else if(/EXP/.test(t))cur='expiry';if(cur&&!grp[i])grp[i]=cur})});
+  const fx={},cr=[],seen={};
+  hr.forEach((c,i)=>{const t=up(c),n=nk(c);if(!n)return;let f=null;
+   if(/STAFF(ID|NO|NUM)|^(EMP|EMPLOYEE|PERS)(ID|NO|NUM|NUMBER)?$|^ID$|^STAFF$/.test(n))f='staffId';else if(/NAME/.test(n))f='name';
+   else if(/^(RANK|POSITION|POS|DESIGNATION)$/.test(n))f='rank';else if(/^(FLEET|AIRCRAFT|ACTYPE|TYPE)$/.test(n))f='fleet';else if(/^BASE/.test(n))f='base';
+   else if(/CONTACT2|PHONE2|MOBILE2|TEL2/.test(n))f='phone2';else if(/CONTACT1|PHONE1|MOBILE1|TEL1|^(MOBILE|PHONE|CONTACT|TEL)$/.test(n))f='phone';
+   else if(/MAIL/.test(n))f='email';else if(/^STATUS$/.test(n))f='status';
+   if(f){if(!(f in fx))fx[f]=i;return}
+   const id=(CID.find(([re])=>re.test(n))||[])[1];if(!id)return;
+   let ty=/ISSU/.test(t)?'issue':/EXP/.test(t)?'expiry':grp[i];
+   if(!ty){seen[id]=(seen[id]||0)+1;ty=seen[id]===1?'issue':'expiry'}
+   cr.push({i,id,ty})});
+  return{h,fx,cr}}
+ return null}
+/* ---------- analysis (no data is changed here) ---------- */
+function analyse(wb){
+ const ex=S.get('crew'),out={rows:[],ph:0,fix:[],bad:[],warn:[],sheets:0,blank:0},seenK=new Set();
+ const byId=new Map(ex.map(c=>[String(c.staffId).toLowerCase(),c])),byNm=new Map(ex.map(c=>[c.name.toLowerCase(),c]));
+ wb.SheetNames.forEach(sn=>{const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:''}),hm=headerMap(rows);
+  if(!hm){out.warn.push('Sheet "'+sn+'": no header row with a NAME column found – skipped');return}
+  out.sheets++;
+  rows.slice(hm.h+1).forEach((r,k)=>{const ln=hm.h+k+2,g=f=>hm.fx[f]==null?'':String(r[hm.fx[f]]).trim();
+   const name=g('name'),sid=g('staffId').replace(/\.0+$/,'');
+   if(!name&&!sid||/^(FULL)?NAME$/i.test(name))return out.blank++;
+   const base={ln,name:name||'(no name)',sid},skip=n=>out.rows.push({...base,a:'Skip',note:n});
+   const e1=(sid&&byId.get(sid.toLowerCase()))||(!sid&&byNm.get(name.toLowerCase()))||null;
+   if(!name)return skip('Missing name');if(!e1&&!sid)return skip('Missing Staff ID');
+   const key=(sid||name).toLowerCase();if(seenK.has(key))return skip('Duplicate row in file');seenK.add(key);
+   const rk=RK(g('rank'))||(e1?e1.rank:'');if(!rk)return skip(g('rank')?'Unknown rank "'+g('rank')+'"':'Missing rank');
+   const fl=FL(rk),P={},B=[],A=[],notes=[];
+   const set=(k,v)=>{if(v===''||v==null)return;const o=e1?e1[k]:undefined;if(!e1||o!==v){P[k]=v;B.push(k+': '+(o||'—'));A.push(k+': '+v)}};
+   set('name',name);set('staffId',e1?'':sid);set('rank',rk);if(P.rank)P.group=fl?'Flight':'Cabin';
+   const fv=/330/.test(g('fleet'))?'A330':/320/.test(g('fleet'))?'A320':'';if(!e1&&!fv)notes.push('fleet defaulted to A320');set('fleet',fv||(e1?'':'A320'));
+   const bs=/SAN/i.test(g('base'))?"Sana'a":/ADEN|ADN/i.test(g('base'))?'Aden':'';set('base',bs||(e1?'':'Aden'));
+   ['phone','phone2'].forEach(f=>{const raw=hm.fx[f]==null?'':r[hm.fx[f]];if(String(raw).trim()==='')return;const p=fmtPhone(raw);p===null?notes.push(f+' "'+raw+'" not recognised'):set(f,p)});
+   const em=g('email').toLowerCase();if(/^\S+@\S+\.\S+$/.test(em))set('email',em);else if(em)notes.push('invalid email');
+   if(/^(IN.?ACTIVE|RETIRED)/i.test(g('status'))){set('status','Inactive');if(!e1||e1.status==='Active')set('reason','Imported from spreadsheet')}
+   const cm=new Map();
+   hm.cr.forEach(({i,id,ty})=>{const nm=CN(id,fl);if(!nm)return;const d=pdate(r[i]);
+    if(d.st==='ph')out.ph++;else if(d.st==='bad')out.bad.push('Row '+ln+' '+nm+' '+ty+' "'+r[i]+'"');
+    else if(d.v){if(d.st==='fix')out.fix.push('Row '+ln+' '+nm+' '+ty+': '+r[i]+' → '+d.v);const o=cm.get(nm)||{};o[ty]=d.v;cm.set(nm,o)}});
+   const cur=e1?JSON.parse(JSON.stringify(e1.creds||[])):[],cb=[],ca=[];
+   cm.forEach((o,nm)=>{if(!o.expiry)return;const c=cur.find(x=>x.name===nm);
+    if(!c){cur.push({name:nm,issue:o.issue||'',expiry:o.expiry});cb.push(nm+': —');ca.push(nm+': '+o.expiry)}
+    else if(c.expiry!==o.expiry||(o.issue&&c.issue!==o.issue)){cb.push(nm+': '+(c.expiry||'—'));ca.push(nm+': '+o.expiry);c.expiry=o.expiry;if(o.issue)c.issue=o.issue}});
+   if(!e1)Object.assign(P,{status:P.status||'Active',reason:P.reason||'',phone:P.phone||'',phone2:P.phone2||'',email:P.email||'',avatar:'',passport:{},docs:[],creds:cur});
+   else if(cb.length)P.creds=cur;
+   const a=e1?(Object.keys(P).length?'Update':'Skip'):'New';
+   out.rows.push({...base,a,rk,id:e1&&e1.id,P,B:B.concat(cb),A:A.concat(ca),nc:cur.length,note:a==='Skip'?'No changes':notes.join('; ')})})});
+ return out}
+/* ---------- preview + apply ---------- */
+function showPreview(res,fname){
+ const R=res.rows,c=a=>R.filter(r=>r.a===a).length,nN=c('New'),nU=c('Update'),nS=c('Skip')+res.blank;
+ const kp=(l,v,col)=>`<div><span class="kl">${l}</span><b${col?` style="color:${col}"`:''}>${v}</b></div>`;
+ const det=r=>String(r.a==='Update'?r.A.join('; '):r.a==='New'?r.nc+' credential(s)'+(r.note?' · '+r.note:''):r.note||'').slice(0,150);
+ const W=[...res.warn];
+ if(res.fix.length)W.push('<b>'+res.fix.length+' malformed date(s) repaired — please verify:</b> '+esc(res.fix.slice(0,6).join(' | '))+(res.fix.length>6?' …':''));
+ if(res.bad.length)W.push('<b>'+res.bad.length+' unreadable date(s) ignored:</b> '+esc(res.bad.slice(0,6).join(' | '))+(res.bad.length>6?' …':''));
+ if(res.ph)W.push(res.ph+' placeholder / NaN date(s) ignored (existing values are never overwritten by blanks).');
+ W.push('Ambiguous dates are read day-first (dd/mm/yyyy). Blank rows are skipped. Nothing is saved until you press Apply.');
+ const m=document.createElement('div');m.className='mo';
+ m.innerHTML=`<div class="md lg"><div class="hd"><i data-lucide="file-spreadsheet" class="ico"></i><h3 class="grow">Import Preview — ${esc(fname)}</h3><button class="ic" data-x><i data-lucide="x" class="ico"></i></button></div><div class="bd">
+ <div class="kp">${kp('New',nN,'#166534')}${kp('Updated',nU,'#B45309')}${kp('Skipped',nS)}${kp('Dates repaired',res.fix.length)}${kp('Placeholders ignored',res.ph)}</div>
+ <div class="wn">${W.join('<br>')}</div>
+ <div style="overflow:auto;max-height:300px"><table class="ora"><tr><th>Row</th><th>Action</th><th>Name</th><th>Staff ID</th><th>Rank</th><th>Details</th></tr>${R.slice(0,80).map(r=>`<tr><td>${r.ln}</td><td><span class="bdg ${r.a==='New'?'g':r.a==='Update'?'a':''}">${r.a==='Skip'&&r.note==='No changes'?'Unchanged':r.a}</span></td><td>${esc(r.name)}</td><td>${esc(r.sid||'—')}</td><td>${esc(r.rk||'')}</td><td>${esc(det(r))}</td></tr>`).join('')||'<tr><td colspan="6">No data rows.</td></tr>'}</table></div>${R.length>80?`<small style="color:var(--mut)">Showing 80 of ${R.length} rows</small>`:''}
+ </div><div class="ft"><button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" id="impOk" ${nN+nU?'':'disabled'}><i data-lucide="check" class="ico"></i>Apply Import (${nN} new, ${nU} updated)</button></div></div>`;
+ m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-x]'))m.remove()});
+ m.querySelector('#impOk').onclick=()=>{m.remove();apply(res,fname)};
+ $('#modal-root').appendChild(m);lucide.createIcons()}
+function apply(res,fname){
+ const A0=S.get('audit').slice(),before=S.get('crew').length,db=[],da=[],nn=[];let n=0,u=0;
+ try{res.rows.forEach(r=>{
+  if(r.a==='New'){S.add('crew',r.P);n++;nn.push(r.name+' ('+r.sid+')')}
+  else if(r.a==='Update'){S.update('crew',r.id,r.P);u++;db.push(r.name+' ['+r.B.join('; ')+']');da.push(r.name+' ['+r.A.join('; ')+']')}})}
+ catch(e){console.error(e);Y.toast('Import interrupted: '+e.message)}
+ const A=S.get('audit');A.length=0;A.push(...A0);
+ const sk=res.rows.filter(r=>r.a==='Skip').length+res.blank;
+ if(u)S.log('crew','IMPORT DETAIL (updates)',cap(db.join(' | ')),cap(da.join(' | ')));
+ if(n)S.log('crew','IMPORT DETAIL (new records)','—',cap(nn.join(' | ')));
+ S.log('crew','IMPORT '+fname,'Crew records: '+before,'Crew records: '+S.get('crew').length+' (+'+n+' new, '+u+' updated, '+sk+' skipped; '+res.fix.length+' dates repaired, '+res.ph+' placeholders ignored)');
+ ['crew','dashboard','reports'].forEach(t=>document.dispatchEvent(new CustomEvent('yptrms:tab',{detail:t})));
+ Y.toast('Import complete: '+n+' new, '+u+' updated, '+sk+' skipped')}
+async function onFile(e){const f=e.target.files[0];e.target.value='';if(!f)return;
+ if(f.size>8e6)return Y.toast('File too large (max 8 MB)');
+ try{Y.toast('Reading '+f.name+'…');await needXl();
+  const wb=XLSX.read(await f.arrayBuffer(),{type:'array',...(/\.csv$/i.test(f.name)?{raw:true}:{})}),res=analyse(wb);
+  if(!res.sheets)return Y.toast(res.warn[0]||'No usable sheet found');
+  showPreview(res,f.name)}catch(x){console.error(x);Y.toast('Import failed: '+x.message)}}
+/* ---------- entry points: #tab-crew toolbar + #tab-settings card ---------- */
+const BTN='<button class="btn btn-tonal" data-imp><i data-lucide="file-spreadsheet" class="ico"></i>Import Excel / CSV</button>';
+const CARD='<div class="card" id="impCard"><h3><i data-lucide="file-spreadsheet" class="ico"></i>Import Crew from Excel / CSV</h3><p class="rp">Reads Yemenia crew sheets with Issue and Expiry date blocks (LIC., PC, MEDICAL, SEP, CRM, DG, SMS, C of T, ETOPS/RVSM, CMC, CBT, LEP). Contacts are normalised to +967. A preview with new / updated / skipped counts is shown before anything is saved.</p><button class="btn btn-primary sm" data-imp><i data-lucide="upload" class="ico"></i>Choose .xlsx / .csv File</button></div>';
+function inject(){let k=0;
+ const a=$('#cAdd');if(a&&!$('#tab-crew [data-imp]')){a.insertAdjacentHTML('beforebegin',BTN);k=1}
+ const b=$('#setBody');if(b&&!b.querySelector('#impCard')){b.insertAdjacentHTML('afterbegin',CARD);k=1}
+ if(k)lucide.createIcons()}
+$('#modal-root').insertAdjacentHTML('beforeend','<input type="file" id="impFile" accept=".xlsx,.xls,.csv,text/csv" style="display:none">');
+$('#impFile').onchange=onFile;
+document.addEventListener('click',e=>{if(e.target.closest('[data-imp]'))$('#impFile').click()});
+new MutationObserver(inject).observe($('#tab-settings'),{childList:true,subtree:true});
+document.addEventListener('yptrms:login',inject);document.addEventListener('yptrms:tab',inject);
+inject();lucide.createIcons();
+})();
+</script>
+<script id="step1-settings">
+(()=>{
+if(window.__step1Settings)return;window.__step1Settings=1;
+const KEY='YPTRMS_V1',$=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const T=m=>{try{toast(m)}catch(e){console.log(m)}},ico=()=>{try{lucide.createIcons()}catch(e){}},S=()=>window.Store;
+
+/* ---- 0. Safety nets ---- */
+if(!window.lucide)window.lucide={createIcons(){}};
+setTimeout(()=>{if(!window.YPTRMS&&typeof STATE!=='undefined')window.YPTRMS={STATE,load,save,toast,logAudit,$,$$:s=>[...document.querySelectorAll(s)]}},1500);
+const tb=$('.topbar');
+if(tb&&window.ResizeObserver)new ResizeObserver(()=>document.documentElement.style.setProperty('--tbh',(tb.offsetHeight||72)+'px')).observe(tb);
+
+/* ---- 1. Verified localStorage writes (YPTRMS_V1) + audit ---- */
+const rd=()=>{try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}};
+const put=p=>{try{localStorage.setItem(KEY,JSON.stringify({...rd(),...p}));const b=rd();return Object.keys(p).every(k=>JSON.stringify(b[k]??null)===JSON.stringify(p[k]??null))}catch(e){return false}};
+const log=(a,b,c)=>{try{S().log('settings',a,b??null,c??null)}catch(e){}};
+const FULL='Browser storage is full or blocked — change NOT saved';
+const kb=n=>n>1048576?(n/1048576).toFixed(2)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+function usage(){let b=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);b+=(k.length+(localStorage.getItem(k)||'').length)*2}}catch(e){}return{b,p:Math.min(100,b/5242880*100)}}
+const mcol=p=>p>85?'#D71920':p>60?'#F59E0B':'#16A34A';
+const parts=()=>{const o=rd();return Object.keys(o).map(k=>[k,(k.length+JSON.stringify(o[k]).length)*2]).sort((a,b)=>b[1]-a[1]).slice(0,5)};
+const meterHtml=()=>{const u=usage();return`<div class="bar" style="margin:10px 0"><i style="width:${u.p}%;background:${mcol(u.p)}"></i></div><b>${kb(u.b)} of ~5 MB (${u.p.toFixed(0)}%)</b>${u.p>85?'<p class="rp" style="color:var(--red)">Nearly full — delete hero photos or old scans.</p>':''}<p class="rp" style="margin-top:6px">${parts().map(([k,n])=>esc(k)+' '+kb(n)).join(' · ')}</p>`};
+const meter=()=>{const m=$('#stgMeter');if(m)m.innerHTML=meterHtml()};
+const shrink=(f,mx,ty,q=.74)=>new Promise((ok,no)=>{if(!/^image\//.test(f.type))return no(new Error('Images only'));const u=URL.createObjectURL(f),im=new Image();
+ im.onerror=()=>{URL.revokeObjectURL(u);no(new Error('Could not read this image'))};
+ im.onload=()=>{URL.revokeObjectURL(u);const s=Math.min(1,mx/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*s);c.height=Math.round(im.naturalHeight*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL(ty,q))};im.src=u});
+
+/* ---- 2. Emblem + hero photos (max 8, ordered) ---- */
+const heroes=()=>rd().heroImgs||[];
+function setHeroes(a,msg){if(!put({heroImgs:a}))return T(FULL);log('HERO PHOTOS',null,msg+' ('+a.length+'/8)');try{renderSlides()}catch(e){}T(msg);refresh('brand');meter()}
+async function addHeroes(fs){const c=heroes(),room=8-c.length;if(room<=0)return T('Maximum 8 photos — delete one first');
+ try{const add=[];for(const f of fs.slice(0,room))add.push(await shrink(f,1280,'image/jpeg'));setHeroes([...c,...add],'Added '+add.length+' photo(s)'+(fs.length>room?' ('+(fs.length-room)+' skipped, max 8)':''))}catch(x){T(x.message)}}
+const move=(i,d)=>{const a=heroes().slice(),j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];setHeroes(a,'Photo order changed')};
+const delHero=i=>{const a=heroes().slice();a.splice(i,1);setHeroes(a,'Photo deleted')};
+async function setEmblem(f){try{const d=await shrink(f,600,'image/png');if(!put({emblem:d}))return T(FULL);log('EMBLEM','Previous','Emblem replaced');try{renderEmblem()}catch(e){}T('Emblem saved');refresh('brand');meter()}catch(x){T(x.message)}}
+function rmEmblem(){if(!put({emblem:null}))return T(FULL);const s=$('#emblemSlot');if(s){s.style.border='';s.innerHTML='<i data-lucide="award"></i>'}try{renderEmblem()}catch(e){}log('EMBLEM','Custom emblem','Removed');refresh('brand');ico();meter();T('Emblem removed')}
+
+/* ---- 3. Gemini key + FSS lead time ---- */
+function gem(clr){const v=clr?'':$('#stgKey').value.trim();if(v&&!/^[A-Za-z0-9._-]{20,}$/.test(v))return T('That does not look like a valid API key');
+ if(!put({gemini:v}))return T(FULL);log('GEMINI KEY',null,v?'Key saved (hidden)':'Key cleared');T(v?'API key saved locally':'API key cleared');refresh('integ')}
+function saveFss(){const v=parseInt($('#stgFss').value,10);if(!(v>=1&&v<=365))return T('Enter 1–365 days');const st=S().get('settings');if(!st)return T('Settings store unavailable');
+ const o=st.fssLead;if(o===v)return T('Already '+v+' days');st.fssLead=v;log('FSS LEAD TIME','fssLead: '+o,'fssLead: '+v);
+ if(((rd().db||{}).settings||{}).fssLead!==v){st.fssLead=o;return T(FULL)}T('Default FSS lead time: '+v+' days')}
+
+/* ---- 4. Trial managers / courses / licence types / document types ---- */
+const CFG={
+ managers:{t:'Trial Managers (max 5)',i:'shield-check',s:'Manager',cols:[['slot','Slot'],['staffId','Staff ID'],['name','Name'],['role','Role'],['email','Email']],
+  f:[['staffId','Staff ID'],['name','Full name'],['role','Role','select',['System Admin','Training Manager','Coordinator']],['email','Email','email'],['phone','Phone','tel'],['bio','Biometric sign-in','select',['Yes','No']]],req:['staffId','name']},
+ courses:{t:'Courses',i:'book-open',s:'Course',cols:[['code','Code'],['name','Course'],['validity','Validity (Months)']],f:[['code','Code'],['name','Course name'],['validity','Validity (Months)','number']],req:['name']},
+ docTypes:{t:'Document Types',i:'folder-plus',s:'Document type',cols:[['name','Document Type']],f:[['name','Document type name']],req:['name']},
+ licenses:{t:'Licence Types',i:'badge-check',s:'Licence type',cols:[['name','Licence type']],f:[['name','Licence type']],req:['name']}};
+async function syncUsers(){try{const dh=await sha('Yemenia@2026'),old=STATE.users;STATE.users=S().get('managers').map(m=>({slot:m.slot,id:m.staffId,name:m.name,email:(m.email||'').toLowerCase(),role:m.role,hash:(old.find(u=>u.id===m.staffId)||{}).hash||dh}))}catch(e){}}
+const after=k=>{if(k==='managers')syncUsers();refresh(k);meter()};
+const check=(k,p,id)=>{const L=S().get(k);
+ if(k==='managers'){if(L.some(m=>m.staffId===p.staffId&&m.id!==id))return'Staff ID already in use';if(p.email&&!/^\S+@\S+\.\S+$/.test(p.email))return'Invalid email address';
+  if(id&&S().find(k,id).staffId==='82900'&&p.staffId!=='82900')return'The System Admin Staff ID is protected'}
+ else if(L.some(r=>(r.name||'').toLowerCase()===p.name.toLowerCase()&&r.id!==id))return'This name already exists';
+ if(k==='courses'&&p.code&&L.some(r=>(r.code||'').toLowerCase()===p.code.toLowerCase()&&r.id!==id))return'Course code already in use';return''};
+function dlg(title,body,ok,fn,cls){const m=document.createElement('div');m.className='mo';
+ m.innerHTML=`<div class="md sm" style="max-width:600px"><div class="hd"><h3>${title}</h3></div><div class="bd ${cls||''}">${body}</div><div class="ft"><button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" data-ok>${ok}</button></div></div>`;
+ m.onclick=e=>{if(e.target===m||e.target.closest('[data-x]'))m.remove()};m.querySelector('[data-ok]').onclick=()=>{if(fn(m)!==false)m.remove()};
+ $('#modal-root').appendChild(m);const i=m.querySelector('input,select');i&&i.focus()}
+function form(k,id){const c=CFG[k],o=id?S().find(k,id):{};
+ dlg((id?'Edit ':'Add ')+c.s,c.f.map(([f,l,t,op])=>`<label class="lb">${l}${t==='select'?`<select class="in" data-k="${f}">${op.map(v=>`<option${v===(o[f]||op[0])?' selected':''}>${v}</option>`).join('')}</select>`:`<input class="in" data-k="${f}" type="${t||'text'}" value="${esc(o[f]??'')}">`}</label>`).join(''),'Save',m=>{
+  const p={};m.querySelectorAll('[data-k]').forEach(e=>p[e.dataset.k]=e.value.trim());
+  for(const f of c.req)if(!p[f]){T('Required: '+c.f.find(x=>x[0]===f)[1]);return false}
+  const er=check(k,p,id);if(er){T(er);return false}
+  id?S().update(k,id,p):S().add(k,k==='managers'?{slot:[1,2,3,4,5].find(n=>!S().get(k).some(x=>x.slot===n)),...p}:p);
+  after(k);T(c.s+' saved')},'g2')}
+function del(k,id){const r=S().find(k,id);if(!r)return;
+ if(k==='managers'){if(S().get(k).length<2)return T('At least one manager slot must remain');if(r.staffId==='82900')return T('The System Admin slot is protected');if(r.staffId===(STATE.session||{}).id)return T('You cannot delete the account you are signed in with')}
+ dlg('Confirm delete',`Delete <b>${esc(r.name||r.code)}</b> from ${esc(CFG[k].t)}? This cannot be undone.`,'Delete',()=>{S().remove(k,id);after(k);T('Deleted')})}
+const card=k=>{const c=CFG[k],L=S().get(k)||[];return`<div class="card" id="stg-${k}"><div class="tb"><h3 style="margin:0;display:flex;align-items:center;gap:8px"><i data-lucide="${c.i}" class="ico"></i>${c.t}</h3><div class="grow"></div><button class="btn btn-primary sm" data-sa="radd" data-k="${k}"><i data-lucide="plus" class="ico"></i>Add</button></div><div style="overflow:auto"><table class="ora"><tr>${c.cols.map(x=>`<th>${x[1]}</th>`).join('')}<th></th></tr>${L.map(r=>`<tr>${c.cols.map(x=>`<td>${esc(r[x[0]]||'—')}</td>`).join('')}<td style="white-space:nowrap"><button class="ic" data-sa="redit" data-k="${k}" data-id="${r.id}" title="Edit"><i data-lucide="pencil" class="ico"></i></button><button class="ic" data-sa="rdel" data-k="${k}" data-id="${r.id}" title="Delete"><i data-lucide="trash-2" class="ico"></i></button></td></tr>`).join('')||`<tr><td colspan="${c.cols.length+1}">No records.</td></tr>`}</table></div></div>`};
+
+/* ---- 5. Sections + render ---- */
+const sec={
+ brand(){const em=rd().emblem,hi=heroes();return`<div class="card" id="stg-brand"><h3><i data-lucide="image" class="ico"></i>Branding — Winged Emblem &amp; Hero Aircraft Photos</h3>
+ <div class="rw" style="border:0"><div class="av big">${em?`<img src="${em}" alt="Emblem" style="object-fit:contain">`:'YE'}</div><div class="fb"><button class="mini nv" data-sa="emb"><i data-lucide="upload" class="ico"></i>Upload Emblem</button>${em?'<button class="mini rd" data-sa="embx"><i data-lucide="trash-2" class="ico"></i>Remove</button>':''}</div><small style="color:var(--mut)">Shown in the top bar and on every PDF report.</small></div>
+ <div class="sh">Hero slideshow (${hi.length}/8) — order = display order</div><div class="thumbs">${hi.map((s,i)=>`<div class="th"><img src="${s}" alt="Aircraft ${i+1}"><div class="fb"><button class="ic" data-sa="hup" data-i="${i}" ${i?'':'disabled'} title="Move earlier"><i data-lucide="arrow-left" class="ico"></i></button><button class="ic" data-sa="hdn" data-i="${i}" ${i<hi.length-1?'':'disabled'} title="Move later"><i data-lucide="arrow-right" class="ico"></i></button><button class="ic" data-sa="hdel" data-i="${i}" title="Delete"><i data-lucide="trash-2" class="ico"></i></button></div></div>`).join('')||'<small style="color:var(--mut)">No photos — the geometric fallback is shown.</small>'}</div>
+ <button class="btn btn-tonal sm" data-sa="hadd" ${hi.length>=8?'disabled':''} style="margin-top:12px"><i data-lucide="image-plus" class="ico"></i>Add Aircraft Photos</button></div>`},
+ integ(){const k=rd().gemini||'';return`<div class="card" id="stg-integ"><h3><i data-lucide="plug" class="ico"></i>Integrations &amp; Storage</h3><div class="g2"><div>
+ <label class="lb">Google AI Studio (Gemini) API key<span style="display:flex;gap:6px"><input class="in" id="stgKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(k)}" placeholder="Paste key (AIza… or AQ.…)"><button class="ic" data-sa="geye" title="Show / hide"><i data-lucide="eye" class="ico"></i></button></span></label>
+ <div class="fb" style="margin:10px 0 6px"><button class="btn btn-primary sm" data-sa="gsave">Save Key</button><button class="btn btn-tonal sm" data-sa="gclear">Clear</button><span class="bdg ${k?'g':'a'}">${k?'Key stored':'No key'}</span></div><p class="rp">Used for online document scanning. Stored unencrypted in this browser only — do not enter it on a shared device.</p></div>
+ <div><div class="lb">Local storage usage</div><div id="stgMeter">${meterHtml()}</div></div></div></div>`},
+ fss(){const v=(S().get('settings')||{}).fssLead??75;return`<div class="card" id="stg-fss"><h3><i data-lucide="monitor-play" class="ico"></i>FSS Request Lead Time</h3><div class="rw" style="border:0"><label class="lb">Default interval (days before the need date)<input type="number" inputmode="numeric" class="in" id="stgFss" min="1" max="365" value="${v}" style="width:190px"></label><button class="btn btn-primary sm" data-sa="fss">Save</button></div><p class="rp">FSS requests enter the dispatch queue once the need date is inside this interval. A provider can override it individually under Facilities &amp; FSS.</p></div>`},
+ managers:()=>card('managers'),courses:()=>card('courses'),licenses:()=>card('licenses'),docTypes:()=>card('docTypes')};
+function refresh(n){const e=$('#stg-'+n);if(e){e.outerHTML=sec[n]();ico()}else render()}
+function render(){const tab=$('#tab-settings');if(!tab||!S())return;let h=$('#setBody');
+ if(!h){tab.innerHTML='<div id="setBody" class="stk"></div>';h=$('#setBody')}
+ let r=h.querySelector('#stgRoot');if(!r){h.insertAdjacentHTML('beforeend','<div id="stgRoot" class="stk"></div>');r=h.querySelector('#stgRoot')}
+ try{r.innerHTML=Object.keys(sec).map(k=>sec[k]()).join('')}catch(e){console.error(e);r.innerHTML='<div class="card"><h3>Settings could not be displayed</h3><p class="rp">'+esc(e.message)+'</p></div>'}
+ ico()}
+
+/* ---- 6. Events + boot ---- */
+document.body.insertAdjacentHTML('beforeend','<input type="file" id="stgEmblem" accept="image/*" style="display:none"><input type="file" id="stgHero" accept="image/*" multiple style="display:none">');
+$('#stgEmblem').onchange=e=>{const f=e.target.files[0];e.target.value='';f&&setEmblem(f)};
+$('#stgHero').onchange=e=>{const fs=[...e.target.files];e.target.value='';fs.length&&addHeroes(fs)};
+document.addEventListener('click',e=>{const b=e.target.closest('#stgRoot [data-sa]');if(!b||b.disabled)return;const k=b.dataset.k,id=b.dataset.id,i=+b.dataset.i;
+ ({emb:()=>$('#stgEmblem').click(),embx:rmEmblem,hadd:()=>$('#stgHero').click(),hup:()=>move(i,-1),hdn:()=>move(i,1),hdel:()=>delHero(i),
+  geye:()=>{const f=$('#stgKey');f.type=f.type==='password'?'text':'password'},gsave:()=>gem(0),gclear:()=>gem(1),fss:saveFss,
+  radd:()=>k==='managers'&&S().get(k).length>=5?T('All 5 trial manager slots are in use'):form(k),redit:()=>form(k,id),rdel:()=>del(k,id)})[b.dataset.sa]?.()});
+document.addEventListener('yptrms:tab',e=>{if(e.detail==='settings')render()});
+document.addEventListener('yptrms:login',render);
+new MutationObserver(()=>{const h=$('#setBody');if(h&&!h.querySelector('#stgRoot'))render()}).observe($('#tab-settings'),{childList:true,subtree:true});
+setInterval(()=>{const t=$('#tab-settings');if(t&&t.classList.contains('active'))meter()},4000);
+const go=()=>window.YPTRMS?(syncUsers(),render()):setTimeout(go,60);go();
+})();
+</script>
+<script id="step2-scanner">
+(()=>{
+if(window.YScan)return;
+const $=s=>document.querySelector(s),T=m=>{try{toast(m)}catch(e){console.log(m)}};
+const FILT=[['doc','Document'],['color','Colour'],['gray','Grey'],['bw','B&W'],['orig','Original']];
+let Q=null,scanKey='',feed=null,timer=0,stream=null;
+const mk=(w,h)=>{const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));return c};
+const scaleTo=(c,m)=>{const s=Math.min(1,m/Math.max(c.width,c.height));if(s>=1)return c;const o=mk(c.width*s,c.height*s);o.getContext('2d').drawImage(c,0,0,o.width,o.height);return o};
+const inset=(W,H,f=.08)=>[[W*f,H*f],[W*(1-f),H*f],[W*(1-f),H*(1-f)],[W*f,H*(1-f)]];
+const blob=(c,q)=>new Promise(r=>c.toBlob(r,'image/jpeg',q));
+const pts=a=>a.map(p=>p.join(',')).join(' ');
+
+/* ---------- image maths: blur, Otsu, corner detection, perspective warp, scan filter ---------- */
+function gray(d,n){const g=new Float32Array(n);for(let i=0;i<n;i++)g[i]=(d[i*4]*77+d[i*4+1]*150+d[i*4+2]*29)/256;return g}
+function boxBlur(s,w,h,r){const t=new Float32Array(w*h),o=new Float32Array(w*h),n=2*r+1,cl=(v,m)=>Math.min(m,Math.max(0,v));
+ for(let y=0;y<h;y++){let a=0;for(let x=-r;x<=r;x++)a+=s[y*w+cl(x,w-1)];for(let x=0;x<w;x++){t[y*w+x]=a/n;a+=s[y*w+cl(x+r+1,w-1)]-s[y*w+cl(x-r,w-1)]}}
+ for(let x=0;x<w;x++){let a=0;for(let y=-r;y<=r;y++)a+=t[cl(y,h-1)*w+x];for(let y=0;y<h;y++){o[y*w+x]=a/n;a+=t[cl(y+r+1,h-1)*w+x]-t[cl(y-r,h-1)*w+x]}}
+ return o}
+function otsu(g){const H=new Array(256).fill(0),n=g.length;let sum=0;for(let i=0;i<n;i++)H[g[i]|0]++;for(let i=0;i<256;i++)sum+=i*H[i];
+ let sb=0,wb=0,best=0,th=128;for(let t=0;t<256;t++){wb+=H[t];if(!wb)continue;const wf=n-wb;if(!wf)break;sb+=t*H[t];const mb=sb/wb,mf=(sum-sb)/wf,v=wb*wf*(mb-mf)*(mb-mf);if(v>best){best=v;th=t}}return th}
+function detect(g,w,h){const N=w*h,th=otsu(g);let best=null;
+ for(const pol of[1,0]){const m=new Uint8Array(N),seen=new Uint8Array(N);for(let i=0;i<N;i++)m[i]=(g[i]>th)===(pol===1)?1:0;
+  for(let s=0;s<N;s++){if(!m[s]||seen[s])continue;const st=[s],e=[[1e9],[-1e9],[-1e9],[1e9]];seen[s]=1;let a=0,bd=0;
+   while(st.length){const i=st.pop(),x=i%w,y=(i/w)|0;a++;if(!x||!y||x===w-1||y===h-1)bd++;
+    if(x+y<e[0][0])e[0]=[x+y,x,y];if(x-y>e[1][0])e[1]=[x-y,x,y];if(x+y>e[2][0])e[2]=[x+y,x,y];if(x-y<e[3][0])e[3]=[x-y,x,y];
+    if(x>0&&m[i-1]&&!seen[i-1]){seen[i-1]=1;st.push(i-1)}if(x<w-1&&m[i+1]&&!seen[i+1]){seen[i+1]=1;st.push(i+1)}
+    if(y>0&&m[i-w]&&!seen[i-w]){seen[i-w]=1;st.push(i-w)}if(y<h-1&&m[i+w]&&!seen[i+w]){seen[i+w]=1;st.push(i+w)}}
+   if(a<N*.12||a>N*.92||bd>6)continue;
+   const q=e.map(p=>[p[1],p[2]]),qa=Math.abs(q.reduce((z,p,i)=>{const n=q[(i+1)%4];return z+p[0]*n[1]-n[0]*p[1]},0))/2;
+   if(!qa)continue;const r=a/qa;if(r<.72||r>1.15)continue;const sc=a*Math.min(r,1/r);if(!best||sc>best.sc)best={sc,q}}}
+ return best&&best.q}
+function autoQuad(c){const sw=c.videoWidth||c.width,sh=c.videoHeight||c.height,w=320,h=Math.round(w*sh/sw),s=mk(w,h),x=s.getContext('2d',{willReadFrequently:true});
+ x.drawImage(c,0,0,w,h);const q=detect(boxBlur(gray(x.getImageData(0,0,w,h).data,w*h),w,h,2),w,h);return q&&q.map(p=>[p[0]*sw/w,p[1]*sh/h])}
+function solve(A,b){const n=b.length;for(let i=0;i<n;i++){let p=i;for(let r=i+1;r<n;r++)if(Math.abs(A[r][i])>Math.abs(A[p][i]))p=r;[A[i],A[p]]=[A[p],A[i]];[b[i],b[p]]=[b[p],b[i]];
+ for(let r=i+1;r<n;r++){const f=A[r][i]/A[i][i];for(let c=i;c<n;c++)A[r][c]-=f*A[i][c];b[r]-=f*b[i]}}
+ const x=new Array(n);for(let i=n-1;i>=0;i--){let s=b[i];for(let c=i+1;c<n;c++)s-=A[i][c]*x[c];x[i]=s/A[i][i]}return x}
+function warp(sc,q){const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);let w=Math.max(d(q[0],q[1]),d(q[3],q[2])),h=Math.max(d(q[0],q[3]),d(q[1],q[2]));const k=Math.min(1,1600/Math.max(w,h));w=Math.round(w*k);h=Math.round(h*k);
+ const A=[],b=[];[[0,0],[w,0],[w,h],[0,h]].forEach(([u,v],i)=>{const[x,y]=q[i];A.push([u,v,1,0,0,0,-u*x,-v*x],[0,0,0,u,v,1,-u*y,-v*y]);b.push(x,y)});
+ const H=solve(A,b),sw=sc.width,sh=sc.height,S=sc.getContext('2d').getImageData(0,0,sw,sh).data,out=mk(w,h),oc=out.getContext('2d'),od=oc.createImageData(w,h),O=od.data;
+ for(let v=0;v<h;v++)for(let u=0;u<w;u++){const z=H[6]*u+H[7]*v+1,x=(H[0]*u+H[1]*v+H[2])/z,y=(H[3]*u+H[4]*v+H[5])/z,x0=Math.floor(x),y0=Math.floor(y),o=(v*w+u)*4;
+  if(x0<0||y0<0||x0>=sw-1||y0>=sh-1){O[o]=O[o+1]=O[o+2]=255;O[o+3]=255;continue}
+  const fx=x-x0,fy=y-y0,i0=(y0*sw+x0)*4,i1=i0+4,i2=i0+sw*4,i3=i2+4;
+  for(let c=0;c<3;c++)O[o+c]=(S[i0+c]*(1-fx)+S[i1+c]*fx)*(1-fy)+(S[i2+c]*(1-fx)+S[i3+c]*fx)*fy;O[o+3]=255}
+ oc.putImageData(od,0,0);return out}
+function filt(src,mode){const w=src.width,h=src.height,c=mk(w,h),x=c.getContext('2d');x.drawImage(src,0,0);if(mode==='orig')return c;
+ const sw=Math.max(24,Math.round(w/6)),sh=Math.max(24,Math.round(h*sw/w)),sc=mk(sw,sh),sx=sc.getContext('2d');sx.drawImage(src,0,0,sw,sh);
+ const bg=boxBlur(gray(sx.getImageData(0,0,sw,sh).data,sw*sh),sw,sh,Math.max(3,sw>>3)),bi=sx.createImageData(sw,sh);
+ for(let i=0;i<sw*sh;i++){bi.data[i*4]=bi.data[i*4+1]=bi.data[i*4+2]=bg[i];bi.data[i*4+3]=255}sx.putImageData(bi,0,0);
+ const bc=mk(w,h),bx=bc.getContext('2d');bx.drawImage(sc,0,0,w,h);const B=bx.getImageData(0,0,w,h).data,id=x.getImageData(0,0,w,h),D=id.data,K=v=>(v-45)*1.4;
+ for(let i=0;i<w*h*4;i+=4){const b=Math.max(40,B[i]),r=Math.min(255,D[i]/b*255),g=Math.min(255,D[i+1]/b*255),u=Math.min(255,D[i+2]/b*255),l=.3*r+.59*g+.11*u;
+  if(mode==='color'){D[i]=r;D[i+1]=g;D[i+2]=u}else if(mode==='doc'){D[i]=K(r);D[i+1]=K(g);D[i+2]=K(u)}
+  else if(mode==='gray')D[i]=D[i+1]=D[i+2]=K(l);else D[i]=D[i+1]=D[i+2]=l>170?255:0}
+ x.putImageData(id,0,0);return c}
+
+/* ---------- output: JPEG for 1 page, minimal PDF for 2 pages ---------- */
+async function pdf(cv,q){const enc=s=>new TextEncoder().encode(s),parts=[],offs=[];let len=0;const add=b=>{if(typeof b==='string')b=enc(b);parts.push(b);len+=b.length},mark=()=>offs.push(len);
+ const J=await Promise.all(cv.map(c=>blob(c,q).then(b=>b.arrayBuffer()).then(a=>new Uint8Array(a))));
+ add('%PDF-1.4\n');mark();add('1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n');mark();add(`2 0 obj<</Type/Pages/Count ${cv.length}/Kids[${cv.map((_,i)=>(3+3*i)+' 0 R').join(' ')}]>>endobj\n`);
+ cv.forEach((c,i)=>{const L=c.width>c.height,PW=L?842:595,PH=L?595:842,s=Math.min(PW/c.width,PH/c.height),w=c.width*s,h=c.height*s,cs=`q ${w.toFixed(2)} 0 0 ${h.toFixed(2)} ${((PW-w)/2).toFixed(2)} ${((PH-h)/2).toFixed(2)} cm /Im0 Do Q`;
+  mark();add(`${3+3*i} 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${PW} ${PH}]/Contents ${4+3*i} 0 R/Resources<</XObject<</Im0 ${5+3*i} 0 R>>>>>>endobj\n`);
+  mark();add(`${4+3*i} 0 obj<</Length ${cs.length}>>stream\n${cs}\nendstream endobj\n`);
+  mark();add(`${5+3*i} 0 obj<</Type/XObject/Subtype/Image/Width ${c.width}/Height ${c.height}/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ${J[i].length}>>stream\n`);add(J[i]);add('\nendstream endobj\n')});
+ const xr=len;add(`xref\n0 ${offs.length+1}\n0000000000 65535 f \n`+offs.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join('')+`trailer<</Size ${offs.length+1}/Root 1 0 R>>\nstartxref\n${xr}\n%%EOF`);
+ return new Blob(parts,{type:'application/pdf'})}
+async function build(name){const outs=Q.pages.map(p=>filt(p.warped,p.mode));
+ if(outs.length===1)for(const[q,m]of[[.86,1600],[.72,1400],[.6,1100]]){const b=await blob(scaleTo(outs[0],m),q);if(b.size<1.3e6||m===1100)return new File([b],name+'.jpg',{type:'image/jpeg'})}
+ for(const[q,m]of[[.8,1500],[.66,1300],[.55,1100]]){const b=await pdf(outs.map(o=>scaleTo(o,m)),q);if(b.size<1.4e6||m===1100)return new File([b],name+'.pdf',{type:'application/pdf'})}}
+function inject(sel,file){try{const i=$(sel),dt=new DataTransfer();dt.items.add(file);i.files=dt.files;i.dispatchEvent(new Event('change',{bubbles:true}))}catch(e){T('This browser cannot hand the scan to the form — use Upload')}}
+const mut=()=>new Promise(r=>{const el=$('#pb');if(!el)return r();const o=new MutationObserver(()=>{o.disconnect();r()});o.observe(el,{childList:true});setTimeout(()=>{o.disconnect();r()},2500)});
+
+/* ---------- UI shell ---------- */
+document.body.insertAdjacentHTML('beforeend','<div id="yscn" class="hidden"><div class="yt"><b id="ytTitle">Scan</b><span class="bdg" id="ytStep"></span><button class="btn btn-ghost" id="ysX">Close</button></div><div class="ys" id="ysBody"></div><div class="yb" id="ysBar"></div></div><input type="file" id="yscnPick" accept="image/*" style="display:none">');
+const stage=(t,s)=>{$('#ytTitle').textContent=t;$('#ytStep').textContent=s||''};
+function stopCam(){clearInterval(timer);if(stream)stream.getTracks().forEach(t=>t.stop());stream=null}
+function open(key){scanKey=key||'';Q={pages:[],sel:0,last:null,pbox:null};$('#yscn').classList.remove('hidden');document.body.style.overflow='hidden';cam()}
+function close(){stopCam();$('#yscn').classList.add('hidden');document.body.style.overflow='';Q=null}
+function drag(svg,fn){let on=null;const pt=e=>{const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())};
+ svg.addEventListener('pointerdown',e=>{const t=e.target.closest('[data-h]');if(!t)return;on=t.dataset.h;fn(on,pt(e),true);svg.setPointerCapture(e.pointerId);e.preventDefault()});
+ svg.addEventListener('pointermove',e=>{if(on!==null)fn(on,pt(e),false)});svg.addEventListener('pointerup',()=>on=null);svg.addEventListener('pointercancel',()=>on=null)}
+
+/* ---------- stage 1: live camera with edge/corner detection + auto-capture ---------- */
+function cam(){stopCam();stage('Scan document',Q.pages.length?'Page 2 of 2':'Page 1'+(scanKey==='@pass'?' · Passport':''));
+ $('#ysBody').innerHTML='<video id="yv" playsinline muted autoplay></video><svg id="yo" preserveAspectRatio="xMidYMid meet" style="pointer-events:none"><polygon id="yp" class="yq"/></svg><div class="yhint" id="yh">Starting camera…</div>';
+ $('#ysBar').innerHTML='<label class="chk" style="color:#fff"><input type="checkbox" id="yauto" checked>Auto-capture</label><button class="yshut" data-y="shot" aria-label="Capture"></button><button class="btn btn-ghost" data-y="pick">Choose photo</button>';
+ startCam()}
+async function startCam(){const hint=$('#yh');try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw 0;
+ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
+ const v=$('#yv');if(!v||!Q){stopCam();return}v.srcObject=stream;await v.play();let prev=null,ok=0;
+ timer=setInterval(()=>{if(!v.videoWidth||!Q)return;$('#yo').setAttribute('viewBox','0 0 '+v.videoWidth+' '+v.videoHeight);const q=autoQuad(v),poly=$('#yp'),auto=$('#yauto').checked;Q.last=q;
+  if(!q){prev=null;ok=0;poly.setAttribute('points','');hint.textContent='Lay the document flat on a contrasting surface — keep all 4 corners in view';return}
+  const d=prev?Math.max(...q.map((p,i)=>Math.hypot(p[0]-prev[i][0],p[1]-prev[i][1]))):1e9;ok=d<v.videoWidth*.025?ok+1:0;prev=q;
+  poly.setAttribute('points',pts(q));poly.classList.toggle('ok',ok>3);
+  hint.textContent=ok>3&&auto?'Hold steady… '+Math.min(100,Math.round(ok/9*100))+'%':'Document found — tap the shutter'+(auto?' or hold steady':'');
+  if(auto&&ok>=9)shot(v)},130)}
+ catch(e){if($('#yh'))$('#yh').textContent='Camera unavailable (HTTPS and camera permission are required). Use “Choose photo”.'}}
+function shot(v){const c=mk(v.videoWidth,v.videoHeight);c.getContext('2d').drawImage(v,0,0);const q=Q.last;stopCam();Q.src=c;Q.quad=q||inset(c.width,c.height);adjust()}
+$('#yscnPick').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f||!Q)return;const u=URL.createObjectURL(f),im=new Image();im.onerror=()=>T('Could not read this image');
+ im.onload=()=>{URL.revokeObjectURL(u);const s=Math.min(1,2200/Math.max(im.naturalWidth,im.naturalHeight)),o=mk(im.naturalWidth*s,im.naturalHeight*s);o.getContext('2d').drawImage(im,0,0,o.width,o.height);stopCam();Q.src=o;Q.quad=autoQuad(o)||inset(o.width,o.height);adjust()};im.src=u};
+
+/* ---------- stage 2: drag corners, rotate, perspective crop ---------- */
+function adjust(){stage('Adjust corners','Drag the 4 handles');const c=Q.src,W=c.width,H=c.height;
+ $('#ysBody').innerHTML=`<svg id="yadj" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet"><image href="${c.toDataURL('image/jpeg',.85)}" width="${W}" height="${H}"/><polygon id="yq" class="yq"/>${[0,1,2,3].map(i=>`<circle data-h="${i}" r="${Math.max(W,H)/24}"/>`).join('')}</svg>`;
+ $('#ysBar').innerHTML='<button class="btn btn-ghost" data-y="retake">Retake</button><button class="btn btn-ghost" data-y="rot">Rotate</button><button class="btn btn-ghost" data-y="redet">Auto-detect</button><button class="btn btn-primary" data-y="crop">Crop &amp; Scan</button>';
+ const svg=$('#yadj'),draw=()=>{$('#yq').setAttribute('points',pts(Q.quad));svg.querySelectorAll('circle').forEach((e,i)=>{e.setAttribute('cx',Q.quad[i][0]);e.setAttribute('cy',Q.quad[i][1])})};draw();
+ drag(svg,(h,p)=>{Q.quad[h]=[Math.min(W,Math.max(0,p.x)),Math.min(H,Math.max(0,p.y))];draw()})}
+function rotate(){const c=Q.src,o=mk(c.height,c.width),x=o.getContext('2d');x.translate(o.width,0);x.rotate(Math.PI/2);x.drawImage(c,0,0);
+ const m=Q.quad.map(p=>[c.height-p[1],p[0]]);Q.quad=[m[3],m[0],m[1],m[2]];Q.src=o;adjust()}
+function crop(){T('Cropping…');setTimeout(()=>{if(!Q)return;Q.pages.push({warped:warp(Q.src,Q.quad),mode:'doc'});Q.sel=Q.pages.length-1;review()},30)}
+
+/* ---------- stage 3: filter, 2nd page, portrait, confirm ---------- */
+function review(){const p=Q.pages[Q.sel];p.out=filt(p.warped,p.mode);p.th=scaleTo(p.out,120).toDataURL('image/jpeg',.5);stage('Review scan',Q.pages.length+' page'+(Q.pages.length>1?'s':''));
+ $('#ysBody').innerHTML=`<img class="yimg" alt="Scan preview" src="${p.out.toDataURL('image/jpeg',.88)}">`;
+ $('#ysBar').innerHTML=`<div class="ych">${FILT.map(([m,l])=>`<button class="chip ${p.mode===m?'on':''}" data-y="flt" data-m="${m}">${l}</button>`).join('')}</div>
+ <div class="ypg">${Q.pages.map((g,i)=>`<img class="${i===Q.sel?'on':''}" data-y="sel" data-i="${i}" src="${g.th}" alt="Page ${i+1}">`).join('')}</div>
+ ${Q.pages.length<2?'<button class="btn btn-ghost" data-y="add">+ Page 2</button>':''}<button class="btn btn-ghost" data-y="rtk">Retake page</button>
+ ${scanKey==='@pass'?`<button class="btn btn-ghost" data-y="por">${Q.pbox?'✓ Portrait set — edit':'Passport portrait'}</button>`:''}<button class="btn btn-primary" data-y="use">Use scan</button>`}
+
+/* ---------- passport portrait cropper (7:9 box; uses FaceDetector where the browser has it) ---------- */
+const clampBox=(b,W,H)=>{b.w=Math.min(b.w,W);b.h=b.w*9/7;if(b.h>H){b.h=H;b.w=b.h*7/9}b.x=Math.min(W-b.w,Math.max(0,b.x));b.y=Math.min(H-b.h,Math.max(0,b.y));return b};
+async function faceBox(c){const W=c.width,H=c.height;try{if(window.FaceDetector){const f=await new FaceDetector({fastMode:true}).detect(c);if(f[0]){const b=f[0].boundingBox,w=b.width*1.9;return clampBox({x:b.x+b.width/2-w/2,y:b.y+b.height/2-w*9/7*.48,w},W,H)}}}catch(e){}
+ return clampBox({x:W*.045,y:H*.2,w:W*.28},W,H)}
+async function portrait(){const p=Q.pages[Q.sel],c=p.warped,W=c.width,H=c.height;stage('Passport portrait','Move / resize the box');Q.box=Q.pbox&&Q.psel===Q.sel?{...Q.pbox}:await faceBox(c);
+ $('#ysBody').innerHTML=`<svg id="ypo" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet"><image href="${c.toDataURL('image/jpeg',.85)}" width="${W}" height="${H}"/><path id="ysh" class="ysh" fill-rule="evenodd"/><rect id="ybx" data-h="m" class="yq"/><circle id="ysz" data-h="s" r="${Math.max(W,H)/24}"/></svg>`;
+ $('#ysBar').innerHTML='<button class="btn btn-ghost" data-y="pno">No portrait</button><button class="btn btn-primary" data-y="pok">Use portrait</button>';
+ const svg=$('#ypo'),draw=()=>{const b=Q.box;$('#ysh').setAttribute('d',`M0 0H${W}V${H}H0Z M${b.x} ${b.y}h${b.w}v${b.h}h${-b.w}Z`);const r=$('#ybx');r.setAttribute('x',b.x);r.setAttribute('y',b.y);r.setAttribute('width',b.w);r.setAttribute('height',b.h);$('#ysz').setAttribute('cx',b.x+b.w);$('#ysz').setAttribute('cy',b.y+b.h)};draw();
+ drag(svg,(h,pt,first)=>{const b=Q.box;if(h==='m'){if(first)Q.off=[pt.x-b.x,pt.y-b.y];b.x=pt.x-Q.off[0];b.y=pt.y-Q.off[1]}else b.w=Math.max(W*.08,pt.x-b.x);clampBox(b,W,H);draw()})}
+async function avatar(){const b=Q.pbox,o=mk(280,360);o.getContext('2d').drawImage(Q.pages[Q.psel].warped,b.x,b.y,b.w,b.h,0,0,280,360);return new File([await blob(o,.88)],'passport-portrait.jpg',{type:'image/jpeg'})}
+
+/* ---------- finish: hand the file to the crew form ---------- */
+async function done(){const key=scanKey,pages=Q.pages.map(p=>p.warped),md=Q.pages.map(p=>p.mode).join('/');
+ try{T('Processing scan…');const f=await build('scan-'+new Date().toISOString().slice(0,16).replace(/[-:T]/g,'')),av=Q.pbox?await avatar():null;
+  window.YScan.last={key,pages,file:f,avatar:av};document.dispatchEvent(new CustomEvent('yptrms:scan',{detail:window.YScan.last}));
+  try{window.Store.log('scan','DOCUMENT SCAN',null,(key||'document')+' · '+pages.length+' page(s) · '+md+(av?' · portrait':''))}catch(e){}
+  close();inject('#crewScan',f);
+  if(av){await mut();feed=av;const b=$('#pb [data-a="av"]');if(b)b.click();else{feed=null;T('Open the Info & Passport tab to apply the portrait')}}
+ }catch(x){console.error(x);T('Scan failed: '+x.message)}}
+
+/* ---------- wiring ---------- */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a="scan"]');if(b)scanKey=b.dataset.k||''},true);
+$('#crewScan').addEventListener('click',e=>{e.preventDefault();open(scanKey)});
+$('#crewFile').addEventListener('click',e=>{if(feed){e.preventDefault();const f=feed;feed=null;inject('#crewFile',f)}});
+$('#ysX').onclick=close;
+$('#yscn').addEventListener('click',e=>{const b=e.target.closest('[data-y]');if(!b||!Q)return;const i=+b.dataset.i;
+ ({shot:()=>{const v=$('#yv');v&&v.videoWidth?shot(v):T('Camera not ready')},pick:()=>$('#yscnPick').click(),retake:cam,rot:rotate,
+  redet:()=>{Q.quad=autoQuad(Q.src)||inset(Q.src.width,Q.src.height);adjust()},crop,flt:()=>{Q.pages[Q.sel].mode=b.dataset.m;review()},sel:()=>{Q.sel=i;review()},add:cam,
+  rtk:()=>{Q.pages.splice(Q.sel,1);Q.sel=0;Q.pbox=null;Q.pages.length?review():cam()},por:portrait,pok:()=>{Q.pbox=Q.box;Q.psel=Q.sel;review()},pno:()=>{Q.pbox=null;review()},use:done})[b.dataset.y]?.()});
+window.YScan={open,last:null};
+})();
+</script>
+<script id="step3-ocr">
+(()=>{
+if(window.YOcr)return;window.YOcr=1;
+const $=s=>document.querySelector(s),T=m=>{try{toast(m)}catch(e){console.log(m)}};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cfg=()=>{try{return JSON.parse(localStorage.getItem('YPTRMS_V1'))||{}}catch(e){return{}}};
+const MODELS=['gemini-2.5-flash','gemini-2.0-flash','gemini-flash-latest'],P2=n=>String(n).padStart(2,'0');
+const MON={JAN:1,FEB:2,MAR:3,APR:4,MAY:5,JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12};
+const ok=(y,m,d)=>y>=1900&&y<=2100&&m>=1&&m<=12&&d>=1&&d<=31?y+'-'+P2(m)+'-'+P2(d):null;
+const yy=(v,dob)=>{v=+v;if(v>=100)return v;const c=new Date().getFullYear()%100;return dob?(v>c?1900+v:2000+v):2000+v};
+const iso=v=>/^\d{4}-\d{2}-\d{2}$/.test(v||'')?v:null;
+
+/* ---------- text parsing (used by the offline engine and as a safety net) ---------- */
+function dates(t){const o=[],push=(i,s)=>{if(s)o.push({d:s,c:t.slice(Math.max(0,i-50),i).toLowerCase()})};
+ t.replace(/\b(19|20)(\d{2})[-\/.](\d{1,2})[-\/.](\d{1,2})\b/g,(s,a,b,m,d,i)=>push(i,ok(+(a+b),+m,+d)));
+ t.replace(/\b(\d{1,2})[-\/.\s](\d{1,2})[-\/.\s](\d{4}|\d{2})\b/g,(s,d,m,y,i)=>push(i,ok(yy(y),+m,+d)));
+ t.replace(/\b(\d{1,2})\s*([A-Za-z]{3})[A-Za-z]*(?:\s*[\/.\-]\s*[A-Za-z]{3,})?[\s\/.\-]*(\d{4}|\d{2})\b/g,(s,d,mo,y,i)=>push(i,MON[mo.toUpperCase()]?ok(yy(y),MON[mo.toUpperCase()],+d):null));
+ return o}
+function pickDates(t){const L=dates(t).filter(x=>!/birth|dob|born/.test(x.c.slice(-30))),E=/expir|valid\s*(until|to|thru|till)|exp\b|until|validity/,I=/issue|issued|valid\s*from|effective|\biss\b|from/;
+ const ex=L.filter(x=>E.test(x.c.slice(-35))).map(x=>x.d).sort(),is=L.filter(x=>!E.test(x.c.slice(-35))&&I.test(x.c.slice(-35))).map(x=>x.d).sort(),all=[...new Set(L.map(x=>x.d))].sort();
+ const expiry=ex.length?ex[ex.length-1]:(all.length?all[all.length-1]:null),issue=is.length?is[0]:(all.length>1?all[0]:null);return{expiry,issue:issue&&issue!==expiry?issue:null}}
+const dig=s=>s.replace(/O/g,'0').replace(/[IL]/g,'1').replace(/S/g,'5').replace(/B/g,'8').replace(/Z/g,'2');
+function mrz(t){const L=t.toUpperCase().split(/\n/).map(s=>s.replace(/[^A-Z0-9<]/g,'')).filter(s=>s.length>=40),r={};
+ for(const s of L){if(s.length>=43){const n=dig(s.slice(13,19)),e=dig(s.slice(21,27));
+   if(/^\d{6}$/.test(n)&&/^\d{6}$/.test(e)&&/^[A-Z<]{3}$/.test(s.slice(10,13))){const ex=ok(2000+ +e.slice(0,2),+e.slice(2,4),+e.slice(4,6));
+    if(ex){r.number=s.slice(0,9).replace(/</g,'');r.expiry=ex;r.dob=ok(yy(n.slice(0,2),1),+n.slice(2,4),+n.slice(4,6));r.nationality=s.slice(10,13)}}}
+  const m=/^P[A-Z<]([A-Z<]{3})([A-Z<]+?)<<([A-Z<]+)/.exec(s);if(m&&!r.holder)r.holder=(m[3].replace(/</g,' ')+' '+m[2].replace(/</g,' ')).replace(/\s+/g,' ').trim()}
+ return r}
+function parse(t,key){const r=key==='@pass'||/^P[<A-Z]/m.test(t)?mrz(t):{},D=pickDates(t);if(!r.expiry&&D.expiry)r.expiry=D.expiry;if(D.issue&&key!=='@pass')r.issue=D.issue;
+ if(key==='@pass'&&!r.number){const m=/\b([A-Z]{1,2}\d{6,8})\b/.exec(t.toUpperCase());if(m)r.number=m[1]}return r}
+
+/* ---------- engine 1: Google AI Studio (Gemini Vision) ---------- */
+const prompt=k=>`You read airline crew documents. ${k==='@pass'?'The image is a passport data page.':k==='@doc'?'The image is a training, licence or administrative document.':'The image is a crew licence, medical certificate or training certificate named "'+k+'".'} Return ONLY JSON with keys: holder_name, document_number, issue_date, expiry_date, date_of_birth, nationality, document_title, mrz (the machine-readable lines if present). Dates must be ISO YYYY-MM-DD. Use null for anything missing or not clearly legible; never guess.`;
+function norm(o,key){const r={holder:o.holder_name||'',number:String(o.document_number||'').replace(/\s/g,''),issue:iso(o.issue_date),expiry:iso(o.expiry_date),dob:iso(o.date_of_birth),nationality:o.nationality||'',title:o.document_title||''};
+ if(o.mrz){const m=mrz(String(o.mrz));if(m.expiry&&!r.expiry)r.expiry=m.expiry;if(m.number&&!r.number)r.number=m.number;if(m.holder&&!r.holder)r.holder=m.holder}
+ if(key==='@pass')r.issue=null;return r}
+async function gem(d,key){const parts=[{text:prompt(d.key)}];
+ for(const c of d.pages){const s=Math.min(1,1400/Math.max(c.width,c.height)),o=document.createElement('canvas');o.width=c.width*s;o.height=c.height*s;o.getContext('2d').drawImage(c,0,0,o.width,o.height);parts.push({inline_data:{mime_type:'image/jpeg',data:o.toDataURL('image/jpeg',.82).split(',')[1]}})}
+ let err=new Error('no model');
+ for(const m of MODELS){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),30000);
+  try{const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+m+':generateContent',{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{parts}],generationConfig:{temperature:0,responseMimeType:'application/json'}})});
+   if(r.status===404){err=new Error('model '+m+' not found');continue}if(!r.ok)throw new Error('HTTP '+r.status);
+   const j=await r.json(),txt=(((j.candidates||[])[0]||{}).content||{parts:[]}).parts.map(p=>p.text||'').join('');return norm(JSON.parse(txt.replace(/^\s*```json|```\s*$/g,'')),d.key)}
+  catch(e){err=e;if(e.name==='AbortError')break}finally{clearTimeout(tm)}}
+ throw err}
+
+/* ---------- engine 2: Tesseract.js (offline once warmed) ---------- */
+let tP=null;const loadT=()=>window.Tesseract?Promise.resolve():(tP=tP||new Promise((res,no)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';s.onload=res;s.onerror=()=>{tP=null;no(new Error('Tesseract unavailable'))};document.head.appendChild(s)}));
+async function tess(d){await loadT();const w=await Tesseract.createWorker('eng');let txt='';
+ try{for(const c of d.pages){txt+='\n'+(await w.recognize(c)).data.text;
+   if(d.key==='@pass'){const m=document.createElement('canvas');m.width=c.width;m.height=Math.round(c.height*.28);m.getContext('2d').drawImage(c,0,c.height-m.height,c.width,m.height,0,0,m.width,m.height);
+    await w.setParameters({tessedit_char_whitelist:'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<',tessedit_pageseg_mode:'6'});txt+='\n'+(await w.recognize(m)).data.text;await w.setParameters({tessedit_char_whitelist:'',tessedit_pageseg_mode:'3'})}}}
+ finally{await w.terminate()}
+ return parse(txt,d.key)}
+async function warm(){const n=navigator.connection;if(cfg().ocrWarm||!navigator.onLine||(n&&(n.saveData||n.type==='cellular')))return;
+ try{await loadT();const w=await Tesseract.createWorker('eng');await w.terminate();window.YPTRMS.save({ocrWarm:true})}catch(e){}}
+
+/* ---------- orchestration: Gemini online with key → silent Tesseract fallback ---------- */
+async function extract(d){const k=cfg().gemini;
+ if(navigator.onLine&&k){try{return{eng:'Gemini Vision',f:await gem(d,k)}}catch(e){console.info('[OCR] Gemini skipped:',e.message)}}
+ try{return{eng:'Offline OCR (Tesseract)',f:await tess(d)}}catch(e){console.info('[OCR] Tesseract skipped:',e.message)}return null}
+const ROWS=k=>k==='@pass'?[['number','Passport No.','text'],['expiry','Passport expiry','date']]:k==='@doc'?[['title','Document title','text'],['issue','Document date','date']]:[['issue','Issue date','date'],['expiry','Expiry date','date']];
+const SEL=(k,f)=>k==='@pass'?{number:'#pb [data-f="passport.no"]',expiry:'#pb [data-f="passport.expiry"]'}[f]:k==='@doc'?{title:'[data-d="title"]',issue:'[data-d="date"]'}[f]:'#pb [data-c="'+k.replace(/"/g,'\\"')+'"][data-p="'+f+'"]';
+function apply(k,vals){let n=0;
+ for(const[f,v]of Object.entries(vals)){const el=$(SEL(k,f));if(!el||!v)continue;el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));n++}
+ const last=ROWS(k).map(r=>r[0]).reverse().map(f=>$(SEL(k,f))).find(Boolean);if(last)last.dispatchEvent(new Event('change',{bubbles:true}));return n}
+function review(d,res){const k=d.key,rows=ROWS(k).filter(r=>$(SEL(k,r[0])));
+ if(!rows.length){T('Scan read ('+res.eng+') but no matching field is open to fill');return}
+ const prof=($('#ph h3')||{}).textContent||'',tok=s=>String(s).toUpperCase().match(/[A-Z]{3,}/g)||[],mis=res.f.holder&&tok(prof).length&&!tok(res.f.holder).some(t=>tok(prof).includes(t));
+ const m=document.createElement('div');m.className='mo';m.style.zIndex=450;
+ m.innerHTML=`<div class="md sm" style="max-width:520px"><div class="hd"><h3>Confirm extracted fields</h3><span class="bdg g">${esc(res.eng)}</span></div><div class="bd g2">${rows.map(([f,l,t])=>`<label class="lb">${l}<input class="in" type="${t}" data-o="${f}" value="${esc(res.f[f]||'')}"></label>`).join('')}</div>
+ <div class="bd" style="padding-top:0">${res.f.holder?`<small style="display:block;margin-bottom:6px;color:${mis?'#B91C1C':'var(--mut)'}">Name on document: <b>${esc(res.f.holder)}</b>${mis?' — does NOT match this profile. Verify before applying.':''}</small>`:''}<small style="color:var(--mut)">Automatic reading can contain errors. Check each value against the document.</small></div>
+ <div class="ft"><button class="btn btn-tonal" data-x>Skip</button><button class="btn btn-primary" data-ok>Apply to form</button></div></div>`;
+ m.onclick=e=>{if(e.target===m||e.target.closest('[data-x]'))m.remove()};
+ m.querySelector('[data-ok]').onclick=()=>{const v={};m.querySelectorAll('[data-o]').forEach(i=>v[i.dataset.o]=i.value.trim());const n=apply(k,v);m.remove();
+  try{window.Store.log('scan','OCR APPLIED',k||'document',Object.keys(v).filter(x=>v[x]).join(', ')+' · '+res.eng)}catch(e){}T(n+' field(s) applied — review, then Save the profile')};
+ document.body.appendChild(m)}
+function pill(t){let p=$('#ocrPill');if(!t){p&&p.remove();return}if(!p){p=document.createElement('div');p.id='ocrPill';document.body.appendChild(p)}p.textContent=t}
+function store(d,res){try{const y=window.YPTRMS,l=y.load().ocrLog||[];l.unshift({ts:new Date().toISOString(),key:d.key||'document',engine:res.eng,fields:res.f});y.save({ocrLog:l.slice(0,30)});
+ window.Store.log('scan','OCR '+res.eng,d.key||'document',Object.keys(res.f).filter(x=>res.f[x]).join(', ')||'no fields')}catch(e){}}
+document.addEventListener('yptrms:scan',async e=>{const d=e.detail;if(!d||!d.pages)return;pill('Reading document…');
+ try{const res=await extract(d);pill();if(!res){T('Scan saved. Automatic reading is unavailable offline — enter the details manually.');return}store(d,res);review(d,res);warm()}
+ catch(x){console.error(x);pill()}});
+})();
+</script>
+<script id="step3-dispatch">
+(()=>{
+if(window.YDispatch)return;
+const $=s=>document.querySelector(s),T=m=>{try{toast(m)}catch(e){console.log(m)}},S=()=>window.Store,DT=()=>window.YDate;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const P2=n=>String(n).padStart(2,'0'),U=()=>((window.YPTRMS||{}).STATE||{}).session||{name:'Flight Operations Training',id:'-'};
+const ref=t=>{const n=new Date();return'YPTRMS/'+t+'/'+n.getFullYear()+P2(n.getMonth()+1)+P2(n.getDate())+'-'+P2(n.getHours())+P2(n.getMinutes())};
+
+/* ---------- formal commercial-aviation templates; casual / religious greetings are stripped ---------- */
+const GREET=/^\s*(hi|hey|hello|dear all|good\s+(morning|afternoon|evening|day)|(as-?)?sal+a+m\S*(\s+\S+){0,2}|peace be\S*(\s+\S+){0,3}|god bless\S*|ramadan kareem|eid mubarak)\b[\s,!.:-]*/i;
+const formal=t=>String(t||'').split(/\r?\n/).map(l=>l.replace(GREET,'').replace(/\b(in\s?sha+\s?'?allah|insha'?allah|masha'?allah|alhamdulillah)\b[\s,!.]*/gi,'')).join('\n');
+const sig=()=>{const u=U();return'Respectfully,\n'+u.name+' (Staff ID '+u.id+')\nFlight Operations Training Department\nYemenia Airways — Aden HQ'};
+const wrap=(to,type,subject,paras)=>({subject:'Yemenia Flight Operations Training — '+subject,body:formal('Attention: '+to+'\nReference: '+ref(type)+'\nSubject: '+subject+'\n\n'+paras.join('\n\n')+'\n\n'+sig())});
+function compose(a){const ds=a.dataset;
+ const m=/^n:[^:]+:([^:]+):(crew|cc)$/.exec(ds.key||'');
+ if(m){const c=S().find('crew',m[1]);if(c){const x=(c.creds||[]).filter(z=>z.expiry).map(z=>({...z,d:DT().daysTo(z.expiry)})).sort((p,q)=>p.d-q.d)[0];
+  if(x){const ex=x.d<0,st=ex?'expired on '+x.expiry+' ('+(-x.d)+' day(s) ago)':'expires on '+x.expiry+' (in '+x.d+' day(s))';
+   if(m[2]==='crew')return wrap(c.rank+' '+c.name,'CRN','Notice of qualification '+(ex?'expiry':'expiring soon')+' — '+x.name,['This is to notify you that your '+x.name+' '+st+'.','Please contact the Flight Operations Training Department, Aden HQ, to arrange revalidation at the earliest opportunity.']);
+   return wrap('Crew Control','CCN','Crew qualification status — '+c.rank+' '+c.name,['Crew member: '+c.rank+' '+c.name+' (Staff ID '+c.staffId+', '+c.fleet+').','Qualification: '+x.name+' '+st+'.',ex?'Rostering: this crew member must not be rostered for duty until revalidation is completed and recorded.':'Rostering: please plan the roster around the revalidation window.'])}}}
+ if(ds.col==='fssReqs'){const r=S().find('fssReqs',ds.id);if(r){const p=S().find('fss',r.providerId)||{},c=S().find('crew',r.crewId)||{};
+  return wrap(p.poc||p.name||'FSS Scheduling','FSS','Full flight simulator request — '+r.desc,['The Flight Operations Training Department, Yemenia Airways, requests the following simulator training service: '+r.desc+'.','Trainee: '+(c.rank||'')+' '+(c.name||'—')+' (Staff ID '+(c.staffId||'—')+', '+(c.fleet||'—')+').','Required by: '+r.need+'.','Kindly confirm availability and the allocated session date and time.'])}}
+ if(ds.col==='rosters'){const r=S().find('rosters',ds.id);if(r)return wrap('Training Participants','ROS','Training roster and attendance — '+r.title,['Course: '+r.title+'.','Date: '+r.date+'.   Venue: '+r.room+'.','Attendance is recorded by scanning the QR code displayed at the room entrance on arrival. Participants are requested to be present before the scheduled start time.'])}
+ if(!ds.act&&!ds.key&&!ds.col){const dp=((a.closest('.rm')||{}).querySelector&&(a.closest('.rm').querySelector('b')||{}).textContent)||'Addressee';return wrap(dp,'GEN','Coordination request',['',''])}
+ return null}
+
+/* ---------- safe opening (no page navigation, so iOS never unloads the app) ---------- */
+const addr=a=>{const m=/^mailto:([^?]*)/i.exec(a.getAttribute('href')||'');try{return m?decodeURIComponent(m[1]):''}catch(e){return m?m[1]:''}};
+const phone=a=>{const m=/wa\.me\/(\d*)/.exec(a.getAttribute('href')||'');return m?m[1]:''};
+const mailUrl=(to,s,b)=>'mailto:'+encodeURIComponent(to).replace(/%40/g,'@').replace(/%2C/g,',')+'?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b.replace(/\r?\n/g,'\r\n'));
+const waUrl=(p,t)=>'https://wa.me/'+p+'?text='+encodeURIComponent(t);
+function go(url,blank){const a=document.createElement('a');a.href=url;a.rel='noopener';if(blank)a.target='_blank';a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),600)}
+function copy(t){try{navigator.clipboard.writeText(t).then(()=>T('Message copied'),()=>T('Copy failed'))}catch(e){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();try{document.execCommand('copy');T('Message copied')}catch(z){T('Copy failed')}x.remove()}}
+
+/* ---------- "Sent Today" confirmation sheet ---------- */
+let pend=null;const hide=()=>{pend=null;const s=$('#dspSheet');if(s)s.classList.add('hidden')};
+function mark(p){const ds=p.ds,t0=DT().today();
+ if(ds.col){const r=S().find(ds.col,ds.id);if(r&&r.sentOn!==t0)S().update(ds.col,ds.id,{sentOn:t0})}else if(ds.key&&!S().sentToday(ds.key))S().mark(ds.key);
+ S().log('dispatch','SENT',p.lbl+': Pending','Sent Today · '+p.ch);T('Marked "Sent Today"');
+ document.dispatchEvent(new CustomEvent('yptrms:tab',{detail:'dashboard'}))}
+function sheet(p){pend=p;let s=$('#dspSheet');
+ if(!s){s=document.createElement('div');s.id='dspSheet';document.body.appendChild(s);
+  s.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b||!pend)return;const a=b.dataset.s;if(a==='ok'){mark(pend);hide()}else if(a==='copy')copy(pend.text);else if(a==='again')go(pend.url,pend.blank);else hide()})}
+ s.innerHTML='<b>'+esc(p.lbl)+'</b><p class="rp" style="margin:6px 0 10px">'+esc(p.ch)+' opened. Once the message has actually been sent, confirm below so it is recorded as <b>Sent Today</b>. If it did not open, use Copy text or Open again.</p><div class="fb"><button class="btn btn-primary sm" data-s="ok">Mark Sent Today</button><button class="btn btn-tonal sm" data-s="copy">Copy text</button><button class="btn btn-tonal sm" data-s="again">Open again</button><button class="btn btn-tonal sm" data-s="x">Dismiss</button></div>';
+ s.classList.remove('hidden')}
+
+/* ---------- capture-phase handler: runs before (and replaces) the old 350 ms auto-mark ---------- */
+document.addEventListener('click',e=>{const a=e.target.closest('#tab-dashboard a.mini.em,#tab-dashboard a.mini.wa');if(!a)return;
+ let c;try{c=compose(a)}catch(x){console.error(x)}if(!c)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ const em=a.classList.contains('em'),to=em?addr(a):phone(a),text=c.subject+'\n\n'+c.body,url=em?mailUrl(to,c.subject,c.body):waUrl(to,text),track=a.hasAttribute('data-act');
+ if(!to)T(em?'No email address on file — enter the recipient in Mail':'No WhatsApp number on file — choose the contact in WhatsApp');
+ if(url.length>3500){copy(text);T('Message too long for a link — copied to the clipboard')}else go(url,!em);
+ try{S().log('dispatch',(em?'EMAIL':'WHATSAPP')+' OPENED',c.subject,to||'(no address)')}catch(x){}
+ if(track)sheet({ds:{...a.dataset},lbl:c.subject,ch:em?'Email':'WhatsApp',text,url,blank:!em})},true);
+window.YDispatch={compose,formal};
+})();
+</script>
+
+
+<!-- ===== YPTRMS Stage 2A — Training Planner: paste both blocks right before </body> ===== -->
+<style id="planner-css">
+.pl-tb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.pl-tb h3{margin:0;color:var(--navy);display:flex;align-items:center;gap:8px}
+.pl-tb .in{max-width:230px}.pl-tb select.in{max-width:200px}.pl-nav{display:flex;align-items:center;gap:6px}.pl-nav b{min-width:170px;text-align:center;color:var(--navy);font-size:13px}
+.pl-wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.pl-day{background:#F8FAFC;border:1px solid var(--line);border-radius:12px;min-height:190px;display:flex;flex-direction:column;overflow:hidden}
+.pl-day.today{border:2px solid var(--navy);background:#fff}
+.pl-dh{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#EEF2F7;font-size:12px;font-weight:700;color:var(--navy)}
+.pl-day.today .pl-dh{background:var(--navy);color:#fff}
+.pl-dh button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:18px;line-height:1;border-radius:50%;width:24px;height:24px}.pl-dh button:hover{background:rgba(100,116,139,.25)}
+.pl-ds{padding:8px;display:flex;flex-direction:column;gap:8px;flex:1}.pl-none{color:var(--mut);font-size:11px;text-align:center;margin:auto}
+.pl-ev{border:1px solid var(--line);border-left:5px solid var(--c,#64748B);border-radius:8px;background:#fff;padding:8px 9px;cursor:pointer;font-size:12px;line-height:1.45;transition:.12s}
+.pl-ev:hover{box-shadow:0 4px 12px rgba(10,30,70,.15);transform:translateY(-1px)}.pl-ev b{display:block;color:var(--navy);font-size:12.5px}
+.pl-ev small{display:block;color:var(--mut);font-size:11px}.pl-ev .bdg{margin-top:4px;font-size:10px;padding:2px 8px}
+.pl-ev.bad{border-color:#FCA5A5;border-left-color:var(--red);background:#FFF5F5}
+.pl-leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--mut)}.pl-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.pl-list td small{color:var(--mut)}.pl-list tr{cursor:pointer}.pl-act{white-space:nowrap}
+.pl-f{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.pl-f .span2{grid-column:span 2}.pl-f .span3{grid-column:span 3}
+.pl-conf{margin:14px 0 0;display:flex;flex-direction:column;gap:6px}.pl-conf div{padding:8px 12px;border-radius:10px;font-size:12.5px;line-height:1.5}
+.pl-conf .e{background:#FEE2E2;color:#991B1B}.pl-conf .w{background:#FEF3C7;color:#92400E}.pl-conf .k{background:#DCFCE7;color:#166534}
+.pl-tr{border:1px solid var(--line);border-radius:12px;margin-top:6px;overflow:hidden}
+.pl-trh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;background:#F8FAFC;border-bottom:1px solid var(--line)}.pl-trh .in{height:36px;max-width:220px;border-radius:10px}
+.pl-trl{max-height:230px;overflow:auto}.pl-tri{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}.pl-tri:last-child{border:0}
+.pl-tri:hover{background:#EAF0FA}.pl-tri input{accent-color:var(--navy);width:17px;height:17px}.pl-tri small{color:var(--mut)}.pl-tri.dis{opacity:.5;cursor:not-allowed}.pl-tri .bdg{margin-left:auto}
+@media(max-width:1100px){.pl-wk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.pl-wk{grid-template-columns:1fr}.pl-f{grid-template-columns:1fr 1fr}.pl-f .span3{grid-column:span 2}.pl-tb .in,.pl-tb select.in{max-width:none;flex:1 1 100%}.pl-day{min-height:0}}
+</style>
+
+<script id="module-planner">
+/* YPTRMS Stage 2A — Training Planner. Data: Store 'sessions' {date,start,end,room,course,instructor,trainees(count, kept numeric for Dashboard),traineeIds[],title}.
+   Legacy/seed sessions (count only, no names) keep working; assigning names makes `trainees` = names assigned. */
+(()=>{
+if(window.YPlanner)return;
+const S=()=>window.Store,D=window.YDate,$=s=>document.querySelector(s),T=m=>window.YPTRMS.toast(m);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mins=t=>+t.slice(0,2)*60+ +t.slice(3),PAL=['#1B3F85','#7C3AED','#0E9F6E','#B45309','#0891B2','#475569'];
+const dt=s=>new Date(s+'T12:00:00'),addD=(s,n)=>{const d=dt(s);d.setDate(d.getDate()+n);return D.iso(d)};
+const wkStart=s=>addD(s,-dt(s).getDay());                      /* weeks run Sunday–Saturday */
+const fD=(s,o)=>dt(s).toLocaleDateString('en-GB',o||{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+const ovl=(a,b)=>a.date===b.date&&mins(a.start)<mins(b.end)&&mins(b.start)<mins(a.end);
+const same=(a,b)=>String(a||'').trim().toLowerCase()===String(b||'').trim().toLowerCase();
+const title=s=>`${s.course} · ${s.date} ${s.start}–${s.end} · ${s.room}`;
+const sess=()=>S().get('sessions'),rooms=()=>S().get('rooms'),roomOf=n=>rooms().find(r=>r.name===n);
+const active=()=>S().get('crew').filter(c=>c.status==='Active');
+const cname=id=>(S().find('crew',id)||{}).name||'(removed)';
+const ids=s=>Array.isArray(s.traineeIds)?s.traineeIds:[];
+const rcol=n=>PAL[Math.max(0,rooms().findIndex(r=>r.name===n))%PAL.length];
+let view='week',ws=wkStart(D.today()),Q='',fRoom='',rng='upcoming',ready=0;
+const root=()=>$('#tab-planner');
+
+/* ---------- conflict engine (also used for flags on existing sessions) ---------- */
+function check(d,selfId){const E=[],W=[],others=sess().filter(s=>s.id!==selfId),r=roomOf(d.room),n=d.traineeIds.length||+d.trainees||0;
+ if(!d.course||!d.date||!d.start||!d.end||!d.room||!String(d.instructor||'').trim())return{E:['Fill in course, date, start, end, room and instructor.'],W};
+ if(mins(d.end)<=mins(d.start))E.push('End time must be after the start time.');
+ if(!r)E.push(`Room "${esc(d.room)}" no longer exists in Facilities — pick another room.`);
+ else{if(r.override==='Maintenance')E.push(`<b>${esc(r.name)}</b> is under <b>Maintenance</b>${r.note?' ('+esc(r.note)+')':''} — choose another room or clear the override in Settings.`);
+  if(n>r.capacity)W.push(`${n} trainees exceed ${esc(r.name)} capacity (${r.capacity}).`)}
+ if(mins(d.end)>mins(d.start)){
+  others.filter(o=>o.room===d.room&&ovl(d,o)).forEach(o=>E.push(`<b>Room clash</b>: ${esc(d.room)} is booked ${o.start}–${o.end} for “${esc(o.course)}”.`));
+  others.filter(o=>same(o.instructor,d.instructor)&&ovl(d,o)).forEach(o=>E.push(`<b>Instructor clash</b>: ${esc(d.instructor)} teaches “${esc(o.course)}” ${o.start}–${o.end} (${esc(o.room)}).`));
+  const hit={};others.filter(o=>ovl(d,o)).forEach(o=>ids(o).filter(i=>d.traineeIds.includes(i)).forEach(i=>(hit[i]=hit[i]||[]).push(o.course)));
+  const hk=Object.keys(hit);if(hk.length)E.push(`<b>Trainee clash</b>: ${hk.slice(0,4).map(i=>esc(cname(i))+' ('+esc(hit[i][0])+')').join(', ')}${hk.length>4?' +'+(hk.length-4)+' more':''} already in an overlapping session.`)}
+ if(d.date<D.today())W.push('This session is in the past.');
+ return{E,W}}
+const flags=s=>{const c=check({...s,traineeIds:ids(s)},s.id).E,r=roomOf(s.room),f=[];
+ if(r&&r.override==='Maintenance')f.push('Room in maintenance');if(c.some(x=>x.includes('Room clash')))f.push('Room clash');if(c.some(x=>x.includes('Instructor clash')))f.push('Instructor clash');return f};
+
+/* ---------- main view ---------- */
+function mount(){const r=root();if(!r||!window.YPTRMS||!window.YPTRMS.STATE.session)return;
+ if(!ready){r.innerHTML='<div class="card"><div id="plBar"></div><div id="plBody"></div></div>';ready=1;
+  r.addEventListener('click',onClick);r.addEventListener('input',e=>{if(e.target.id==='plQ'){Q=e.target.value;body()}});r.addEventListener('change',e=>{if(e.target.id==='plRoom'){fRoom=e.target.value;body()}})}
+ bar();body()}
+function bar(){const rl=rooms(),we=addD(ws,6);
+ $('#plBar').innerHTML=`<div class="pl-tb"><h3><i data-lucide="calendar-days" class="ico"></i>Training Planner</h3><div class="grow"></div>
+  <button class="chip ${view==='week'?'on':''}" data-v="week">Week</button><button class="chip ${view==='list'?'on':''}" data-v="list">List</button>
+  <button class="btn btn-primary" data-add="${view==='week'&&D.today()>=ws&&D.today()<=we?D.today():view==='week'?ws:D.today()}"><i data-lucide="plus" class="ico"></i>Add Session</button></div>
+ <div class="pl-tb">${view==='week'?`<div class="pl-nav"><button class="ic" data-wk="-1" title="Previous week"><i data-lucide="chevron-left" class="ico"></i></button><b>${fD(ws,{day:'2-digit',month:'short'})} – ${fD(we,{day:'2-digit',month:'short',year:'numeric'})}</b><button class="ic" data-wk="1" title="Next week"><i data-lucide="chevron-right" class="ico"></i></button><button class="chip" data-wk="0">Today</button></div>`
+  :['upcoming','past','all'].map(k=>`<button class="chip ${rng===k?'on':''}" data-rng="${k}">${{upcoming:'Upcoming',past:'Past',all:'All'}[k]}</button>`).join('')}
+  <div class="grow"></div><select class="in" id="plRoom"><option value="">All rooms</option>${rl.map(r=>`<option ${fRoom===r.name?'selected':''}>${esc(r.name)}</option>`).join('')}</select>
+  <input class="in" id="plQ" placeholder="Search course, instructor, trainee…" value="${esc(Q)}"></div>`;lucide.createIcons()}
+function visible(){const q=Q.trim().toLowerCase();return sess().filter(s=>(!fRoom||s.room===fRoom)&&(!q||[s.course,s.instructor,s.room,...ids(s).map(cname)].join(' ').toLowerCase().includes(q)))
+ .sort((a,b)=>(a.date+a.start<b.date+b.start?-1:1))}
+function evH(s){const f=flags(s),n=ids(s).length||s.trainees||0,r=roomOf(s.room);
+ return`<div class="pl-ev ${f.length?'bad':''}" style="--c:${rcol(s.room)}" data-edit="${s.id}"><b>${esc(s.start)}–${esc(s.end)} · ${esc(s.course)}</b><small>${esc(s.room)} · ${esc(s.instructor)}</small><small>${n} trainee${n===1?'':'s'}${r?' / cap '+r.capacity:''}${ids(s).length?'':' (names not assigned)'}</small>${f.map(x=>`<span class="bdg r">${x}</span> `).join('')}</div>`}
+function body(){const list=visible(),T0=D.today();let h='';
+ if(view==='week'){const wk=[...Array(7)].map((_,i)=>addD(ws,i));
+  h=`<div class="pl-wk">${wk.map(d=>{const l=list.filter(s=>s.date===d);return`<div class="pl-day ${d===T0?'today':''}"><div class="pl-dh"><span>${fD(d,{weekday:'short',day:'2-digit',month:'short'})}</span><button data-add="${d}" title="Add session on this day">+</button></div><div class="pl-ds">${l.map(evH).join('')||'<div class="pl-none">No sessions</div>'}</div></div>`}).join('')}</div>
+  <div class="pl-leg">${rooms().map(r=>`<span><i style="background:${rcol(r.name)}"></i>${esc(r.name)}${r.override==='Maintenance'?' (maintenance)':''}</span>`).join('')}<span><i style="background:#D71920;opacity:.35"></i>Red card = clash / maintenance</span></div>`}
+ else{const l=list.filter(s=>rng==='all'||(rng==='upcoming'?s.date>=T0:s.date<T0));if(rng==='past')l.reverse();
+  h=`<div style="overflow:auto"><table class="ora pl-list"><tr><th>Date</th><th>Time</th><th>Course</th><th>Room</th><th>Instructor</th><th>Trainees</th><th>Status</th><th></th></tr>`+
+  l.map(s=>{const f=flags(s),n=ids(s).length||s.trainees||0;return`<tr data-edit="${s.id}"><td>${fD(s.date)}</td><td>${esc(s.start)}–${esc(s.end)}</td><td><b>${esc(s.course)}</b></td><td>${esc(s.room)}</td><td>${esc(s.instructor)}</td>
+   <td>${n}${ids(s).length?'':' <small>(count only)</small>'}</td><td>${f.length?f.map(x=>`<span class="bdg r">${x}</span>`).join(' '):'<span class="bdg g">OK</span>'}</td>
+   <td class="pl-act"><button class="mini nv" data-edit="${s.id}"><i data-lucide="pencil" class="ico"></i>Edit</button> <button class="mini rd" data-del="${s.id}"><i data-lucide="trash-2" class="ico"></i></button></td></tr>`}).join('')+(l.length?'':'<tr><td colspan="8">No sessions in this view.</td></tr>')+'</table></div>'}
+ $('#plBody').innerHTML=h;lucide.createIcons()}
+function onClick(e){const t=e.target,g=a=>t.closest('['+a+']');let x;
+ if(x=g('data-del')){e.stopPropagation();return del(x.dataset.del)}
+ if(x=g('data-edit'))return form(x.dataset.edit);
+ if(x=g('data-add'))return form(null,x.dataset.add);
+ if(x=g('data-v')){view=x.dataset.v;return mount()}
+ if(x=g('data-rng')){rng=x.dataset.rng;return mount()}
+ if(x=g('data-wk')){const n=+x.dataset.wk;ws=n===0?wkStart(D.today()):addD(ws,7*n);return mount()}}
+
+/* ---------- add / edit form ---------- */
+function modal(h){const m=document.createElement('div');m.className='mo';m.innerHTML=`<div class="md">${h}</div>`;$('#modal-root').appendChild(m);
+ m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-x]'))m.remove()});lucide.createIcons();return m}
+function form(id,date){const old=id?S().find('sessions',id):null;if(id&&!old)return;
+ const act=active(),actIds=new Set(act.map(c=>c.id)),dropped=old?ids(old).filter(i=>!actIds.has(i)):[];
+ const d=old?{...old,traineeIds:ids(old).filter(i=>actIds.has(i)),headcount:ids(old).length?'':old.trainees}:{date:date||D.today(),start:'09:00',end:'12:00',course:'',room:(rooms().find(r=>r.override!=='Maintenance')||{}).name||'',instructor:'',traineeIds:[],headcount:''};
+ const sel=new Set(d.traineeIds);let tq='',tf='';
+ const courses=S().get('courses').map(c=>c.name),instr=[...new Set(sess().map(s=>s.instructor).filter(Boolean))];
+ const m=modal(`<div class="hd"><i data-lucide="calendar-plus" class="ico"></i><h3 class="grow">${old?'Edit':'Add'} Training Session</h3><button class="ic" data-x><i data-lucide="x" class="ico"></i></button></div>
+ <div class="bd"><div class="pl-f">
+  <label class="lb span2">Course<input class="in" id="fC" list="plCourses" value="${esc(d.course)}" placeholder="Select or type a course"><datalist id="plCourses">${courses.map(c=>`<option value="${esc(c)}">`).join('')}</datalist></label>
+  <label class="lb">Date<input type="date" class="in" id="fD" value="${d.date}"></label>
+  <label class="lb">Start<input type="time" class="in" id="fS" value="${d.start}"></label>
+  <label class="lb">End<input type="time" class="in" id="fE" value="${d.end}"></label>
+  <label class="lb">Room<select class="in" id="fR">${rooms().map(r=>`<option value="${esc(r.name)}" ${r.name===d.room?'selected':''}>${esc(r.name)} (cap ${r.capacity})${r.override==='Maintenance'?' — MAINTENANCE':''}</option>`).join('')}${!roomOf(d.room)&&d.room?`<option selected>${esc(d.room)}</option>`:''}</select></label>
+  <label class="lb span2">Instructor<input class="in" id="fI" list="plInstr" value="${esc(d.instructor)}" placeholder="Instructor / coordinator"><datalist id="plInstr">${instr.map(c=>`<option value="${esc(c)}">`).join('')}</datalist></label>
+  <label class="lb">Headcount<input type="number" min="0" class="in" id="fH" value="${d.headcount}" placeholder="if no names yet"></label></div>
+  <div class="sh">Trainees — active crew only <span id="fCnt" class="bdg"></span></div>
+  <div class="pl-tr"><div class="pl-trh"><input class="in" id="tQ" placeholder="Search name or Staff ID"><select class="in" id="tF" style="max-width:150px;height:36px"><option value="">All crew</option><option value="Flight">Flight crew</option><option value="Cabin">Cabin crew</option><option>A320</option><option>A330</option></select>
+   <button class="btn btn-tonal sm" id="tAll">Select shown</button><button class="btn btn-tonal sm" id="tNone">Clear</button></div><div class="pl-trl" id="tL"></div></div>
+  <div class="pl-conf" id="fConf"></div></div>
+ <div class="ft">${old?'<button class="btn btn-tonal" id="fDel" style="margin-right:auto">Delete</button>':''}<button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" id="fSave">${old?'Save changes':'Add session'}</button></div>`);
+ const g=i=>m.querySelector(i),cur=()=>({id:id||undefined,course:g('#fC').value.trim(),date:g('#fD').value,start:g('#fS').value,end:g('#fE').value,room:g('#fR').value,instructor:g('#fI').value.trim(),trainees:+g('#fH').value||0,traineeIds:[...sel]});
+ const busy=()=>{const c=cur(),b={};if(c.date&&c.start&&c.end&&mins(c.end)>mins(c.start))sess().filter(o=>o.id!==id&&ovl(c,o)).forEach(o=>ids(o).forEach(i=>b[i]=o.course));return b};
+ function people(){const b=busy(),q=tq.trim().toLowerCase();
+  const l=act.filter(c=>(!q||(c.name+' '+c.staffId+' '+c.rank).toLowerCase().includes(q))&&(!tf||[c.group,c.fleet].includes(tf))).sort((a,b)=>a.name<b.name?-1:1);
+  g('#tL').innerHTML=l.map(c=>{const bz=b[c.id]&&!sel.has(c.id);return`<label class="pl-tri ${bz?'dis':''}"><input type="checkbox" data-c="${c.id}" ${sel.has(c.id)?'checked':''} ${bz?'disabled':''}><span><b>${esc(c.name)}</b> <small>${esc(c.rank)} · ${esc(c.fleet)} · ${esc(c.staffId)}</small></span>${b[c.id]?`<span class="bdg a">Busy: ${esc(b[c.id])}</span>`:''}</label>`}).join('')||'<div class="pl-tri">No active crew match.</div>';
+  g('#tL')._shown=l.filter(c=>!b[c.id]).map(c=>c.id)}
+ function upd(){const c=cur(),r=check(c,id),n=c.traineeIds.length,rm=roomOf(c.room);
+  g('#fCnt').textContent=n?`${n} selected${rm?' / cap '+rm.capacity:''}`:'none selected';g('#fH').disabled=n>0;
+  g('#fConf').innerHTML=r.E.map(x=>`<div class="e">⛔ ${x}</div>`).join('')+r.W.map(x=>`<div class="w">⚠ ${x}</div>`).join('')+(dropped.length&&old?`<div class="w">⚠ ${dropped.length} previously assigned crew member(s) are no longer Active and will be removed on save.</div>`:'')+(!r.E.length?'<div class="k">✓ No room, instructor or trainee conflicts.</div>':'');
+  g('#fSave').disabled=r.E.length>0;return r}
+ m.addEventListener('input',e=>{if(e.target.id==='tQ'){tq=e.target.value;people()}else{if(['fD','fS','fE'].includes(e.target.id))people();upd()}});
+ m.addEventListener('change',e=>{if(e.target.id==='tF'){tf=e.target.value;people()}if(e.target.id==='fR'||e.target.id==='fD'||e.target.id==='fS'||e.target.id==='fE')people();
+  if(e.target.dataset.c){e.target.checked?sel.add(e.target.dataset.c):sel.delete(e.target.dataset.c)}upd()});
+ g('#tAll').onclick=()=>{(g('#tL')._shown||[]).forEach(i=>sel.add(i));people();upd()};g('#tNone').onclick=()=>{sel.clear();people();upd()};
+ if(old)g('#fDel').onclick=()=>{m.remove();del(id)};
+ g('#fSave').onclick=()=>{const c=cur(),r=upd();if(r.E.length)return T('Resolve the conflicts first');save(old,c);m.remove()};
+ people();upd()}
+function save(old,c){const n=c.traineeIds.length||c.trainees,rec={date:c.date,start:c.start,end:c.end,room:c.room,course:c.course,instructor:c.instructor,trainees:n,traineeIds:c.traineeIds};rec.title=title(rec);
+ if(!old){S().add('sessions',rec);T('Session added')}
+ else{const live=S().find('sessions',old.id),b=[],a=[];
+  ['date','start','end','room','course','instructor'].forEach(k=>{if(live[k]!==rec[k]){b.push(k+': '+live[k]);a.push(k+': '+rec[k])}});
+  const o=new Set(ids(live)),nw=new Set(rec.traineeIds),add=[...nw].filter(i=>!o.has(i)).map(cname),rm=[...o].filter(i=>!nw.has(i)).map(cname);
+  if(add.length||rm.length||live.trainees!==rec.trainees){b.push('trainees: '+(live.trainees||0));a.push('trainees: '+rec.trainees+(add.length?' (+'+add.join(', ')+')':'')+(rm.length?' (−'+rm.join(', ')+')':''))}
+  const was=live.title||title(live);Object.assign(live,rec);                         /* single audit entry; Store.log persists */
+  if(b.length){S().log('sessions','UPDATE '+rec.title,b.join('; '),a.join('; '));T('Session updated')}else{S().log('sessions','UPDATE '+rec.title,'no field changes','saved');T('No changes')}}
+ refresh()}
+function del(id){const s=S().find('sessions',id);if(!s)return;
+ const m=modal(`<div class="hd"><h3>Delete session</h3></div><div class="bd">Delete <b>${esc(s.course)}</b> on ${fD(s.date)}, ${esc(s.start)}–${esc(s.end)} (${esc(s.room)})? This is written to the Audit Log.</div><div class="ft"><button class="btn btn-tonal" data-x>Cancel</button><button class="btn btn-primary" id="dY">Delete</button></div>`);
+ m.firstElementChild.classList.add('sm');m.querySelector('#dY').onclick=()=>{S().remove('sessions',id);m.remove();T('Session deleted');refresh()}}
+/* repaint planner + push to Dashboard (7-Day Summary, Live Room Status, Audit Log re-render from Store) */
+function refresh(){mount();document.dispatchEvent(new CustomEvent('yptrms:tab',{detail:'dashboard'}))}
+/* give legacy/seed sessions a readable audit label (in memory; persisted with the next Store write) */
+function prep(){try{sess().forEach(s=>{if(!s.title)s.title=title(s);if(!Array.isArray(s.traineeIds))s.traineeIds=[]})}catch(e){}}
+document.addEventListener('yptrms:login',()=>{prep();mount()});
+document.addEventListener('yptrms:tab',e=>{if(e.detail==='planner'){prep();mount()}});
+window.YPlanner={refresh:mount};
+})();
+</script>
+
+<!-- ===== YPTRMS Stage 2B — Comms Center: paste both blocks right before </body> (after the Planner blocks) ===== -->
+<style id="comms-css">
+.cm-g{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start}.cm-c{display:flex;flex-direction:column;gap:20px;min-width:0}
+.cm-f{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cm-f .sp{grid-column:span 2}
+.cm-seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.cm-box{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:6px}.cm-bh{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;background:#F8FAFC;border-bottom:1px solid var(--line)}.cm-bh .in{height:36px;max-width:220px;border-radius:10px}
+.cm-l{max-height:210px;overflow:auto}.cm-i{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}.cm-i:last-child{border:0}.cm-i:hover{background:#EAF0FA}.cm-i input{accent-color:var(--navy);width:17px;height:17px}.cm-i small{color:var(--mut)}
+.cm-r{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}.cm-r:last-child{border:0}.cm-r small{color:var(--mut);font-size:11px}
+.cm-pv{white-space:pre-wrap;font-size:12px;background:#F8FAFC;border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-height:200px;overflow:auto;line-height:1.5}
+.cm-lg td{font-size:12px}.mini.dis{background:#CBD5E1;color:#64748B;cursor:not-allowed;pointer-events:none}
+@media(max-width:1000px){.cm-g{grid-template-columns:1fr}}@media(max-width:600px){.cm-f{grid-template-columns:1fr}.cm-f .sp{grid-column:span 1}}
+</style>
+
+<script id="module-comms">
+/* YPTRMS Stage 2B — Comms Center. Formal messages (same tone/signature as Dashboard dispatch) to crew, Crew Control / Flight Scheduling, FSS providers.
+   Recipients: ACTIVE crew only. Sent history is kept in Store.get('settings').commsLog (persisted by Store.log) and mirrored to the Audit Log. */
+(()=>{
+if(window.YComms)return;
+const S=()=>window.Store,D=window.YDate,$=s=>document.querySelector(s),T=m=>window.YPTRMS.toast(m);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const U=()=>((window.YPTRMS||{}).STATE||{}).session||{name:'Flight Operations Training',id:'-'};
+const fm=t=>window.YDispatch&&window.YDispatch.formal?window.YDispatch.formal(t):t,P2=n=>String(n).padStart(2,'0');
+const mkRef=()=>{const n=new Date();return'YPTRMS/COM/'+n.getFullYear()+P2(n.getMonth()+1)+P2(n.getDate())+'-'+P2(n.getHours())+P2(n.getMinutes())};
+const sig=()=>{const u=U();return'Respectfully,\n'+u.name+' (Staff ID '+u.id+')\nFlight Operations Training Department\nYemenia Airways — Aden HQ'};
+const fD=s=>new Date(s+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+const active=()=>S().get('crew').filter(c=>c.status==='Active'),sess=()=>S().get('sessions');
+const slabel=s=>`${s.date} ${s.start} · ${s.course} · ${s.room}`;
+const KINDS={Reminder:['Training session reminder','This is a reminder of the following training session.'],Change:['CHANGE to training session','Please note the following CHANGE to the scheduled training session. Updated details are shown below.'],Cancellation:['CANCELLATION of training session','The following training session is CANCELLED. A new date, if applicable, will be communicated separately.'],Roster:['Training roster and attendance','You are assigned to the following training session.']};
+let st=null,ready=0,cq='';
+const fresh=()=>({tpl:'session',kind:'Reminder',sid:'',crew:new Set(),cont:new Set(),fss:new Set(),subj:'',body:'',edited:false,sent:{},ref:''});
+const root=()=>$('#tab-comms');
+function details(s){return['Course: '+s.course,'Date: '+fD(s.date),'Time: '+s.start+' – '+s.end,'Venue: '+s.room,'Instructor: '+s.instructor].join('\n')}
+function auto(){if(st.edited)return;
+ if(st.tpl==='session'){const s=S().find('sessions',st.sid);
+  if(!s){st.subj='';st.body='';return}
+  const k=KINDS[st.kind];st.subj=k[0]+' — '+s.course+', '+s.date;
+  st.body=k[1]+'\n\n'+details(s)+(st.kind==='Cancellation'?'':'\n\nAttendance is recorded by scanning the QR code displayed at the room entrance on arrival. Participants are requested to be present before the scheduled start time.')}
+ else if(st.tpl==='cred'){st.subj='Notice of qualification status';st.body=''}
+ else{st.subj='';st.body=''}}
+/* ---------- recipients & message assembly ---------- */
+function recips(){const R=[];
+ active().filter(c=>st.crew.has(c.id)).forEach(c=>R.push({key:'c'+c.id,name:c.rank+' '+c.name,phone:c.phone,email:c.email,crew:c}));
+ S().get('contacts').filter(c=>st.cont.has(c.id)).forEach(c=>R.push({key:'d'+c.id,name:c.dept+' — '+c.name,phone:c.phone,email:c.email}));
+ S().get('fss').filter(f=>st.fss.has(f.id)).forEach(f=>R.push({key:'f'+f.id,name:(f.poc&&!/to be set/i.test(f.poc)?f.poc+', ':'')+f.name,phone:f.whatsapp,email:f.email}));
+ return R}
+function credLines(c){const l=(c.creds||[]).filter(z=>z.expiry).map(z=>({...z,d:D.daysTo(z.expiry)})).filter(z=>z.d<=90).sort((a,b)=>a.d-b.d);
+ return l.length?l.map(z=>'- '+z.name+': '+(z.d<0?'EXPIRED on '+z.expiry+' ('+(-z.d)+' day(s) ago)':'expires on '+z.expiry+' (in '+z.d+' day(s))')).join('\n'):'- All qualifications are valid for more than 90 days.'}
+function paras(r){const p=[];
+ if(st.tpl==='cred'){
+  if(r.crew)p.push('This is to notify you of the current status of your qualifications:\n'+credLines(r.crew)+'\n\nPlease contact the Flight Operations Training Department, Aden HQ, to arrange revalidation where required.');
+  else p.push('Qualification status of the following crew members:\n'+active().filter(c=>st.crew.has(c.id)).map(c=>c.rank+' '+c.name+' (Staff ID '+c.staffId+', '+c.fleet+')\n'+credLines(c)).join('\n\n')+'\n\nPlease roster accordingly. Crew with an expired qualification must not be rostered until revalidation is completed and recorded.')}
+ if(st.body.trim())p.push(st.body.trim());return p}
+const msg=(r,bulk)=>({subject:'Yemenia Flight Operations Training — '+st.subj.trim(),
+ body:fm('Attention: '+(bulk?'All concerned':r.name)+'\nReference: '+st.ref+'\nSubject: '+st.subj.trim()+'\n\n'+(bulk?[st.body.trim()]:paras(r)).join('\n\n')+'\n\n'+sig())});
+const digits=p=>String(p||'').replace(/\D/g,'');
+function go(url,blank){const a=document.createElement('a');a.href=url;a.rel='noopener';if(blank)a.target='_blank';a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),600)}
+function copy(t){try{navigator.clipboard.writeText(t).then(()=>T('Message copied'),()=>T('Copy failed'))}catch(e){const x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();try{document.execCommand('copy');T('Message copied')}catch(z){T('Copy failed')}x.remove()}}
+const ready2=()=>st.subj.trim()&&(st.body.trim()||st.tpl==='cred');
+/* ---------- layout ---------- */
+function mount(){const r=root();if(!r||!window.YPTRMS||!window.YPTRMS.STATE.session)return;
+ if(!ready){st=fresh();r.innerHTML=`<div class="cm-g"><div class="cm-c"><div class="card"><div id="cmForm"></div></div><div class="card"><h3><i data-lucide="users" class="ico"></i>Recipients</h3><div id="cmRec"></div></div><div class="card"><h3><i data-lucide="send" class="ico"></i>Send</h3><div id="cmSend"></div></div></div>
+  <div class="cm-c"><div class="card"><h3><i data-lucide="history" class="ico"></i>Sent Log</h3><div id="cmLog"></div></div></div></div>`;ready=1;
+  r.addEventListener('click',onClick);r.addEventListener('input',onInput);r.addEventListener('change',onChange)}
+ form();rec();send();log()}
+function form(){const list=sess().filter(s=>s.date>=D.addDays(-1)).sort((a,b)=>a.date+a.start<b.date+b.start?-1:1);
+ $('#cmForm').innerHTML=`<h3><i data-lucide="mail" class="ico"></i>Compose Formal Message</h3>
+ <div class="cm-seg">${[['session','Training session'],['cred','Qualification status'],['general','General notice']].map(([k,l])=>`<button class="chip ${st.tpl===k?'on':''}" data-tpl="${k}">${l}</button>`).join('')}<div class="grow"></div><button class="btn btn-tonal sm" data-new><i data-lucide="file-plus" class="ico"></i>New message</button></div>
+ <div class="cm-f">${st.tpl==='session'?`<label class="lb sp">Session (from Training Planner)<select class="in" id="cmSid"><option value="">— select a session —</option>${list.map(s=>`<option value="${s.id}" ${s.id===st.sid?'selected':''}>${esc(slabel(s))}</option>`).join('')}</select></label>
+  <label class="lb sp">Message type<select class="in" id="cmKind">${Object.keys(KINDS).map(k=>`<option ${k===st.kind?'selected':''}>${k}</option>`).join('')}</select></label>`:''}
+  <label class="lb sp">Subject<input class="in" id="cmSubj" value="${esc(st.subj)}" placeholder="Subject"></label>
+  <label class="lb sp">${st.tpl==='cred'?'Additional note (optional — each crew member\'s own qualification list is added automatically)':'Message'}<textarea class="in" id="cmBody" style="height:150px" placeholder="Message text">${esc(st.body)}</textarea></label></div>
+ <p class="rp" style="font-size:12px;color:var(--mut);margin-top:8px">Greetings are removed and the formal header, reference number and signature are added automatically. Editing the text stops auto-fill until you choose a different type or session.</p>`;lucide.createIcons()}
+function rec(){const q=cq.trim().toLowerCase(),cl=active().filter(c=>!q||(c.name+' '+c.staffId+' '+c.rank+' '+c.fleet).toLowerCase().includes(q)).sort((a,b)=>a.name<b.name?-1:1);
+ $('#cmRec').innerHTML=`<div class="qh">Active crew <span class="bdg">${st.crew.size} selected</span></div><div class="cm-box"><div class="cm-bh"><input class="in" id="cmQ" placeholder="Search name or Staff ID" value="${esc(cq)}"><button class="btn btn-tonal sm" data-all>Select shown</button><button class="btn btn-tonal sm" data-none>Clear</button></div>
+  <div class="cm-l">${cl.map(c=>`<label class="cm-i"><input type="checkbox" data-crew="${c.id}" ${st.crew.has(c.id)?'checked':''}><span><b>${esc(c.name)}</b> <small>${esc(c.rank)} · ${esc(c.fleet)} · ${esc(c.staffId)}</small></span>${c.phone||c.email?'':'<span class="bdg a" style="margin-left:auto">No contact</span>'}</label>`).join('')||'<div class="cm-i">No active crew match.</div>'}</div></div>
+  <div class="qh">Crew Control / Flight Scheduling</div><div class="ch">${S().get('contacts').map(c=>`<button class="chip ${st.cont.has(c.id)?'on':''}" data-cont="${c.id}">${esc(c.dept)}</button>`).join('')||'<small>None set up in Facilities.</small>'}</div>
+  <div class="qh">External FSS providers</div><div class="ch">${S().get('fss').map(f=>`<button class="chip ${st.fss.has(f.id)?'on':''}" data-fss="${f.id}">${esc(f.name)}</button>`).join('')||'<small>None set up in Facilities.</small>'}</div>`}
+function send(){const R=recips(),ok=ready2(),bulk=R.filter(r=>r.email);let h='';
+ if(!R.length)h='<small style="color:var(--mut)">Select at least one recipient.</small>';
+ else if(!ok)h='<small style="color:var(--mut)">Add a subject and a message to enable sending.</small>';
+ else{h=R.map(r=>{const bs=(ch,has,ic,l,cls)=>{const k=r.key+'|'+ch,s=st.sent[k];return s==='sent'?`<span class="mini sentb"><i data-lucide="check" class="ico"></i>${l} sent</span>`:s==='opened'?`<button class="mini nv" data-ok="${k}">Confirm ${l} sent</button>`:`<button class="mini ${cls} ${has?'':'dis'}" data-snd="${k}"><i data-lucide="${ic}" class="ico"></i>${l}</button>`};
+   return`<div class="cm-r"><div><b>${esc(r.name)}</b><br><small>${esc(r.phone||'no WhatsApp number')} · ${esc(r.email||'no email')}</small></div><div class="qbt">${bs('wa',digits(r.phone),'message-circle','WhatsApp','wa')}${bs('em',r.email,'mail','Email','em')}<button class="mini gy" data-pv="${r.key}"><i data-lucide="eye" class="ico"></i>Preview</button></div></div>`}).join('');
+  if(st.tpl!=='cred'&&bulk.length>1)h+=`<div class="cm-r"><div><b>One email to all</b><br><small>${bulk.length} recipients in BCC · generic “All concerned” header</small></div><div class="qbt"><button class="mini em" data-bulk><i data-lucide="mails" class="ico"></i>Email all (BCC)</button><button class="mini gy" data-copy><i data-lucide="copy" class="ico"></i>Copy text</button></div></div>`}
+ $('#cmSend').innerHTML=h;lucide.createIcons()}
+function log(){const L=(S().get('settings').commsLog||[]).slice(0,25);
+ $('#cmLog').innerHTML=L.length?`<div style="overflow:auto"><table class="ora cm-lg"><tr><th>When</th><th>To</th><th>Via</th><th>Subject</th></tr>${L.map(e=>`<tr><td>${new Date(e.ts).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td>${esc(e.to)}</td><td>${e.ch}</td><td>${esc(e.subject.replace(/^Yemenia Flight Operations Training — /,''))}<br><small style="color:var(--mut)">${esc(e.user)}</small></td></tr>`).join('')}</table></div>`:'<small style="color:var(--mut)">Nothing sent yet. Confirmed messages appear here and in the Audit Log.</small>';lucide.createIcons()}
+/* ---------- events ---------- */
+function onInput(e){const t=e.target;
+ if(t.id==='cmSubj'){st.subj=t.value;st.edited=true;send()}else if(t.id==='cmBody'){st.body=t.value;st.edited=true;send()}else if(t.id==='cmQ'){cq=t.value;rec()}}
+function onChange(e){const t=e.target;
+ if(t.id==='cmSid'){st.sid=t.value;st.edited=false;const s=S().find('sessions',t.value);if(s&&(s.traineeIds||[]).length)st.crew=new Set(s.traineeIds.filter(i=>active().some(c=>c.id===i)));st.sent={};auto();form();rec();send()}
+ else if(t.id==='cmKind'){st.kind=t.value;st.edited=false;auto();form();send()}
+ else if(t.dataset.crew){t.checked?st.crew.add(t.dataset.crew):st.crew.delete(t.dataset.crew);rec();send()}}
+function onClick(e){const g=a=>e.target.closest('['+a+']');let x;
+ if(x=g('data-tpl')){st.tpl=x.dataset.tpl;st.edited=false;st.sent={};auto();return form()||send()}
+ if(g('data-new')){st=fresh();cq='';return mount()}
+ if(g('data-all')){const q=cq.trim().toLowerCase();active().filter(c=>!q||(c.name+' '+c.staffId+' '+c.rank+' '+c.fleet).toLowerCase().includes(q)).forEach(c=>st.crew.add(c.id));rec();return send()}
+ if(g('data-none')){st.crew.clear();rec();return send()}
+ if(x=g('data-cont')){const k=x.dataset.cont;st.cont.has(k)?st.cont.delete(k):st.cont.add(k);rec();return send()}
+ if(x=g('data-fss')){const k=x.dataset.fss;st.fss.has(k)?st.fss.delete(k):st.fss.add(k);rec();return send()}
+ if(x=g('data-pv'))return preview(x.dataset.pv);
+ if(x=g('data-snd'))return open(x.dataset.snd);
+ if(x=g('data-ok'))return confirm(x.dataset.ok);
+ if(g('data-bulk'))return bulkMail();
+ if(g('data-copy')){const m=msg(null,1);return copy(m.subject+'\n\n'+m.body)}}
+function open(k){const [rk,ch]=k.split('|'),r=recips().find(z=>z.key===rk);if(!r||!ready2())return;
+ st.ref=st.ref||mkRef();const m=msg(r),em=ch==='em',url=em?'mailto:'+r.email+'?subject='+encodeURIComponent(m.subject)+'&body='+encodeURIComponent(m.body.replace(/\r?\n/g,'\r\n')):'https://wa.me/'+digits(r.phone)+'?text='+encodeURIComponent(m.subject+'\n\n'+m.body);
+ if(url.length>3500){copy(m.subject+'\n\n'+m.body);T('Message too long for a link — copied to the clipboard instead')}else go(url,!em);
+ st.sent[k]='opened';try{S().log('comms',(em?'EMAIL':'WHATSAPP')+' OPENED',m.subject,r.name)}catch(x){}send()}
+function confirm(k){const [rk,ch]=k.split('|'),r=recips().find(z=>z.key===rk);if(!r)return;const m=msg(r),L=S().get('settings');
+ L.commsLog=L.commsLog||[];L.commsLog.unshift({ts:new Date().toISOString(),user:U().name,to:r.name,ch:ch==='em'?'Email':'WhatsApp',subject:m.subject,ref:st.ref});L.commsLog=L.commsLog.slice(0,200);
+ st.sent[k]='sent';S().log('comms','SENT',m.subject+' → '+r.name,'Sent · '+(ch==='em'?'Email':'WhatsApp')+' · '+st.ref);   /* Store.log persists the settings change too */
+ T('Recorded as sent');send();log();document.dispatchEvent(new CustomEvent('yptrms:tab',{detail:'dashboard'}))}
+function bulkMail(){if(!ready2())return;st.ref=st.ref||mkRef();const to=recips().filter(r=>r.email).map(r=>r.email),m=msg(null,1),url='mailto:?bcc='+encodeURIComponent(to.join(',')).replace(/%40/g,'@').replace(/%2C/g,',')+'&subject='+encodeURIComponent(m.subject)+'&body='+encodeURIComponent(m.body.replace(/\r?\n/g,'\r\n'));
+ if(url.length>3500){copy(m.subject+'\n\n'+m.body);T('Too long for a link — message copied; paste into your mail app')}else go(url);
+ S().log('comms','EMAIL OPENED (BCC)',m.subject,to.length+' recipient(s)')}
+function preview(rk){const r=recips().find(z=>z.key===rk);if(!r)return;st.ref=st.ref||mkRef();const m=msg(r),d=document.createElement('div');d.className='mo';
+ d.innerHTML=`<div class="md"><div class="hd"><h3 class="grow">Preview — ${esc(r.name)}</h3><button class="ic" data-x><i data-lucide="x" class="ico"></i></button></div><div class="bd"><b>${esc(m.subject)}</b><div class="cm-pv" style="margin-top:10px;max-height:60vh">${esc(m.body)}</div></div><div class="ft"><button class="btn btn-tonal" data-x>Close</button></div></div>`;
+ d.firstElementChild.classList.add('sm');d.addEventListener('click',e=>{if(e.target===d||e.target.closest('[data-x]'))d.remove()});$('#modal-root').appendChild(d);lucide.createIcons()}
+document.addEventListener('yptrms:login',mount);
+document.addEventListener('yptrms:tab',e=>{if(e.detail==='comms')mount()});
+window.YComms={refresh:mount};
+})();
+</script>
+
+</body>
+</html>
